@@ -100,11 +100,9 @@ window.C3_DEFAULT_GEO = JSON.parse(JSON.stringify(window.C3_GEO));
 try {
   const savedCreators = JSON.parse(localStorage.getItem('c3_creator_manager_data') || 'null');
   if (Array.isArray(savedCreators)) {
-    const never20Default = JSON.parse(JSON.stringify(window.C3_DEFAULT_CREATORS['never-20']));
-    const refreshedSavedCreators = [never20Default, ...savedCreators.filter(creator => creator.slug !== 'never-20')];
-    const savedSlugs = new Set(refreshedSavedCreators.map(creator => creator.slug));
+    const savedSlugs = new Set(savedCreators.map(creator => creator.slug));
     const newDefaultCreators = Object.values(window.C3_DEFAULT_CREATORS).filter(creator => !savedSlugs.has(creator.slug));
-    const mergedCreators = [...newDefaultCreators, ...refreshedSavedCreators];
+    const mergedCreators = [...newDefaultCreators, ...savedCreators];
     localStorage.setItem('c3_creator_manager_data', JSON.stringify(mergedCreators));
     window.C3_CREATORS = mergedCreators.reduce((map, creator) => {
       map[creator.slug] = creator;

@@ -1,17 +1,16 @@
-AGGIORNAMENTO GITHUB — MACROAREE PANEL
+AGGIORNAMENTO CATEGORIE PANEL — TUTTI I CREATOR
 
-1. Apri il repository GitHub del sito.
-2. Carica admin.html e admin.js nella cartella principale del repository.
-3. Quando GitHub lo chiede, conferma la sostituzione dei file esistenti.
-4. Attendi la pubblicazione e apri https://events.c3agency.it/admin.html
-5. Aggiorna la pagina con Ctrl+F5.
+Carica tutti i file di questa cartella nella cartella principale del repository
+GitHub, sostituendo i file omonimi.
 
-Controllo rapido:
-- aggiungi una macroarea;
-- assegnala a un'attività dal menu “Macroarea”;
-- salva il creator;
-- riapri il creator e verifica che l'assegnazione sia rimasta.
+Correzioni incluse:
+- le categorie assegnate dal pannello vengono mostrate nelle schede creator;
+- la correzione vale per tutti i creator, compresa Cristiana Nerdarte;
+- rimossa la vecchia regola speciale che ignorava le categorie personalizzate;
+- mantenute aggiunta, rinomina ed eliminazione delle macroaree;
+- impedito il ripristino automatico dei dati salvati;
+- aggiornate le versioni dei file per evitare la cache.
 
-File inclusi:
-- admin.html
-- admin.js
+Dopo la pubblicazione apri l'area riservata e premi Ctrl+F5.
+Per vedere una categoria nella scheda pubblica, almeno un'attività deve essere
+assegnata a quella categoria e poi il creator deve essere salvato.

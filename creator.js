@@ -82,11 +82,6 @@ function activityCategory(activity){
 }
 
 function groupedActivities(person){
-  if(person.slug==='cristiana-nerdarte') return [
-    {name:'Host',items:[{title:'Moderazione, interviste e quiz',description:'Moderazione di panel tematici e interviste, intrattenimento sul palco, creazione e presentazione di quiz a premi dedicati a fantasy, Harry Potter, Tolkien, supereroi e fantascienza.'}]},
-    {name:'Cosplay',items:[{title:'Giurata e presentatrice cosplay',description:'Giurata e presentatrice di gare cosplay, con esperienza diretta da cosplayer e capacità di accompagnare concorrenti e pubblico durante tutte le fasi del contest.'}]},
-    {name:'Panel',items:person.activities.map(activity=>{const title=typeof activity==='object'?activity.title:activity;return{title,description:(typeof activity==='object'&&activity.description)||nerdartePanelDescriptions[title]||explainActivity(title,person)}})}
-  ];
   const groups=[];
   person.activities.forEach(activity=>{
     const title=typeof activity==='object'?activity.title:activity;
