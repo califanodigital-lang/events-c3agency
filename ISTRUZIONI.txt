@@ -1,0 +1,17 @@
+AGGIORNAMENTO GITHUB — MACROAREE PANEL
+
+1. Apri il repository GitHub del sito.
+2. Carica admin.html e admin.js nella cartella principale del repository.
+3. Quando GitHub lo chiede, conferma la sostituzione dei file esistenti.
+4. Attendi la pubblicazione e apri https://events.c3agency.it/admin.html
+5. Aggiorna la pagina con Ctrl+F5.
+
+Controllo rapido:
+- aggiungi una macroarea;
+- assegnala a un'attività dal menu “Macroarea”;
+- salva il creator;
+- riapri il creator e verifica che l'assegnazione sia rimasta.
+
+File inclusi:
+- admin.html
+- admin.js
