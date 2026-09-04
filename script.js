@@ -1,5 +1,4 @@
 const creatorGrid=document.querySelector('.creator-grid');
-const savedRoster=localStorage.getItem('c3_creator_manager_data');
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 if(window.C3_SITE_CONTENT){
   const contentMap={
@@ -64,7 +63,7 @@ if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: re
   startHeroRotation();
   document.addEventListener('visibilitychange',()=>document.hidden?stopHeroRotation():startHeroRotation());
 }
-if(creatorGrid&&savedRoster){
+if(creatorGrid&&window.C3_CREATORS&&Object.keys(window.C3_CREATORS).length){
   creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creator.image?`<img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}">`:`<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`}<div><span>${escapeHtml(creator.category)}</span><h3>${escapeHtml(creator.name)}</h3><p>${escapeHtml(creator.description)}</p><small>${escapeHtml(creator.meta)}</small></div></article>`).join('');
   const count=document.querySelector('.roster-count');
   if(count) count.textContent=`${Object.keys(window.C3_CREATORS).length} CREATOR · UN UNICO PARTNER`;
