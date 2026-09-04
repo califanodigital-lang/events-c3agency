@@ -24,7 +24,7 @@ const imageFocus = {
   'kety':'50% 38%','filo-d-oro':'50% 30%','kiria-eternalove':'32% 43%','ede-e-davide':'50% 40%',
   'sa-leggenda':'55% 40%','crudest-tv':'54% 22%','monkey-tuna':'31% 38%','pepiyos':'50% 50%',
   'teddino':'50% 44%','shorii':'50% 43%','soryu-geggy':'50% 24%','spiegabro':'50% 32%','teo-the-teach':'50% 38%',
-  'sonny-cosplay':'50% 40%','gattoacab':'50% 50%'
+  'sonny-cosplay':'50% 40%','gattoacab':'50% 50%','never-20':'66% 58%'
 };
 
 function explainActivity(activity, person){

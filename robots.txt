@@ -1,4 +1,5 @@
 User-agent: *
+Allow: /
 Disallow: /admin.html
 Disallow: /login.html
-Disallow: /panel.html
+Sitemap: https://events.c3agency.it/sitemap.xml

@@ -1,4 +1,5 @@
 const creatorGrid=document.querySelector('.creator-grid');
+const savedRoster=localStorage.getItem('c3_creator_manager_data');
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 if(window.C3_SITE_CONTENT){
   const contentMap={
@@ -17,6 +18,8 @@ if(window.C3_SITE_CONTENT){
   contentMap.sharedPanelTitle='#panel-condivisi .section-head h2';
   contentMap.sharedPanelText='#panel-condivisi .section-head>p';
   Object.entries(contentMap).forEach(([key,selector])=>{const node=document.querySelector(selector);if(node&&window.C3_SITE_CONTENT[key])node.textContent=window.C3_SITE_CONTENT[key]});
+  const privacyNote=document.querySelector('.form-privacy');
+  if(privacyNote){const label=window.C3_SITE_CONTENT.contactPrivacy||'I dati vengono utilizzati esclusivamente per rispondere alla richiesta.';privacyNote.innerHTML=`${escapeHtml(label)} <a href="privacy.html">Leggi l’informativa privacy</a>.`}
   ['heroImage1','heroImage2','heroImage3'].forEach((key,index)=>{const image=document.querySelectorAll('#home .cast-image img')[index];if(image&&window.C3_SITE_CONTENT[key])image.src=window.C3_SITE_CONTENT[key]});
 }
 const creatorTags=creator=>{
@@ -63,7 +66,7 @@ if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: re
   startHeroRotation();
   document.addEventListener('visibilitychange',()=>document.hidden?stopHeroRotation():startHeroRotation());
 }
-if(creatorGrid&&window.C3_CREATORS&&Object.keys(window.C3_CREATORS).length){
+if(creatorGrid&&window.C3_CREATORS){
   creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creator.image?`<img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}">`:`<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`}<div><span>${escapeHtml(creator.category)}</span><h3>${escapeHtml(creator.name)}</h3><p>${escapeHtml(creator.description)}</p><small>${escapeHtml(creator.meta)}</small></div></article>`).join('');
   const count=document.querySelector('.roster-count');
   if(count) count.textContent=`${Object.keys(window.C3_CREATORS).length} CREATOR · UN UNICO PARTNER`;
@@ -181,12 +184,10 @@ if(contactForm&&whatsappButton){
   contactForm.addEventListener('submit',event=>{
     event.preventDefault();
     if(!contactForm.reportValidity()) return;
-    window.C3_SAVE_CONTACT&&window.C3_SAVE_CONTACT(contactForm);
     location.href=`mailto:${window.C3_SITE_CONTENT?.contactEmailTarget||'info@c3agency.it'}?subject=${encodeURIComponent('Richiesta creator per '+contactForm.elements.event.value)}&body=${encodeURIComponent(requestText())}`;
   });
   whatsappButton.addEventListener('click',()=>{
     if(!contactForm.reportValidity()) return;
-    window.C3_SAVE_CONTACT&&window.C3_SAVE_CONTACT(contactForm);
     window.open(`https://wa.me/${(window.C3_SITE_CONTENT?.contactWhatsappTarget||'393513448497').replace(/\D/g,'')}?text=${encodeURIComponent(requestText())}`,'_blank','noopener');
   });
 }

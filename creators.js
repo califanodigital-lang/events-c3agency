@@ -40,6 +40,26 @@ window.C3_CREATORS = [
   return map;
 }, {});
 
+/* Scheda Never 20 autonoma: sostituisce integralmente eventuali versioni incomplete salvate in precedenza. */
+window.C3_CREATORS['never-20'] = {
+  slug:'never-20',
+  name:'Never 20',
+  category:'GdR · Gaming · Intrattenimento',
+  description:'Never 20 è un progetto dedicato al gioco di ruolo e all’intrattenimento nerd. Il gruppo costruisce esperienze dal vivo tra narrazione, gaming, comedy e partecipazione della community, trasformando palco e area games in uno spazio dinamico e interattivo.',
+  meta:'Campania · target 15–35',
+  image:'assets/never-20.jpg',
+  filters:['gdr-gdt','gaming','pop'],
+  territories:[{area:'sud',region:'Campania'}],
+  activities:[
+    {group:'Gaming & GdR',title:'Sessioni di GdR dal vivo',description:'Sessioni guidate e accessibili, costruite per coinvolgere sia i giocatori esperti sia chi si avvicina per la prima volta al gioco di ruolo, con improvvisazione e partecipazione del pubblico.'},
+    {group:'Panel & talk',title:'Panel su GdR, anime e cinema',description:'Un talk sulle connessioni tra gioco di ruolo, immaginario nerd, anime e cinema, sviluppato con un linguaggio spontaneo e vicino alla community.'},
+    {group:'Host',title:'Hosting dell’area GdR e games',description:'Il gruppo presenta gli appuntamenti, introduce le attività e accompagna il pubblico durante il programma, mantenendo ritmo e continuità nell’area dedicata al gioco.'},
+    {group:'Gaming & GdR',title:'Sfide gaming dal vivo',description:'Challenge e momenti di gaming trasformano la partecipazione del pubblico in uno spettacolo leggero, competitivo e condivisibile.'},
+    {group:'Community & contenuti',title:'Meet & greet con la community',description:'Uno spazio organizzato per incontrare il gruppo, scattare fotografie e creare un momento diretto e autentico con la community.'},
+    {group:'Host',title:'Moderazione e interviste',description:'Never 20 guida conversazioni, interviste e momenti sul palco con un tono informale, rapido e coinvolgente.'}
+  ]
+};
+
 window.C3_GEO = {
   nord: {
     title: 'Nord Italia',
@@ -67,7 +87,7 @@ window.C3_GEO = {
     creators: [
       ['itsklyo','Sicilia'],['carla-grimaldi','Campania'],['finn-naso-blu','Campania'],
       ['faenel','Campania'],['nennella-esposito','Campania'],['shizen','Campania'],
-      ['team-rocker','Campania'],['maurolone','Campania'],['ede-e-davide','Campania'],
+      ['team-rocker','Campania'],['maurolone','Campania'],['ede-e-davide','Campania'],['never-20','Campania'],
       ['sa-leggenda','Sardegna'],['crudest-tv','Campania'],['pepiyos','Puglia'],
       ['teddino','Campania'],['shorii','Campania'],['soryu-geggy','Campania'],['spiegabro','Calabria']
     ]
@@ -80,14 +100,25 @@ window.C3_DEFAULT_GEO = JSON.parse(JSON.stringify(window.C3_GEO));
 try {
   const savedCreators = JSON.parse(localStorage.getItem('c3_creator_manager_data') || 'null');
   if (Array.isArray(savedCreators)) {
-    window.C3_CREATORS = savedCreators.reduce((map, creator) => {
+    const never20Default = JSON.parse(JSON.stringify(window.C3_DEFAULT_CREATORS['never-20']));
+    const refreshedSavedCreators = [never20Default, ...savedCreators.filter(creator => creator.slug !== 'never-20')];
+    const savedSlugs = new Set(refreshedSavedCreators.map(creator => creator.slug));
+    const newDefaultCreators = Object.values(window.C3_DEFAULT_CREATORS).filter(creator => !savedSlugs.has(creator.slug));
+    const mergedCreators = [...newDefaultCreators, ...refreshedSavedCreators];
+    localStorage.setItem('c3_creator_manager_data', JSON.stringify(mergedCreators));
+    window.C3_CREATORS = mergedCreators.reduce((map, creator) => {
       map[creator.slug] = creator;
       return map;
     }, {});
     Object.entries(window.C3_GEO).forEach(([area, group]) => {
-      group.creators = savedCreators.flatMap(creator =>
-        (creator.territories || []).filter(item => item.area === area).map(item => [creator.slug, item.region])
-      );
+      const fallbackRegions = new Map(window.C3_DEFAULT_GEO[area].creators);
+      group.creators = mergedCreators.flatMap(creator => {
+        const territories = creator.territories || [];
+        const savedTerritories = territories.filter(item => item.area === area).map(item => [creator.slug, item.region]);
+        if(savedTerritories.length) return savedTerritories;
+        const fallbackRegion = savedSlugs.has(creator.slug) ? null : fallbackRegions.get(creator.slug);
+        return fallbackRegion ? [[creator.slug, fallbackRegion]] : [];
+      });
     });
   }
 } catch (error) {
