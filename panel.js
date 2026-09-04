@@ -1,0 +1,7 @@
+const root=document.querySelector('#panel-detail'),slug=new URLSearchParams(location.search).get('id'),panel=window.C3_PANELS.find(item=>item.slug===slug);
+const esc=value=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+if(!panel){root.innerHTML='<div class="empty-panel"><h1>Panel non trovato</h1><p>Questa proposta non è disponibile.</p><a class="button" href="index.html#panel-condivisi">Torna ai panel</a></div>'}else{
+  document.title=`${panel.title} | C3 Agency`;
+  const people=(panel.participants||[]).map(id=>window.C3_CREATORS[id]).filter(Boolean);
+  root.innerHTML=`<section class="panel-detail"><div class="panel-detail-inner"><div class="panel-copy"><p class="eyebrow">${esc(panel.eyebrow||'Panel condiviso')}</p><h1>${esc(panel.title)}</h1><p>${esc(panel.description)}</p><div class="panel-facts"><div><b>Durata</b><span>${esc(panel.duration)}</span></div><div><b>Target</b><span>${esc(panel.target)}</span></div><div><b>Ideale per</b><span>${esc(panel.ideal)}</span></div></div></div><div class="panel-people">${panel.image?`<img class="panel-cover" src="${esc(panel.image)}" alt="${esc(panel.title)}">`:`<div class="panel-portraits" data-count="${people.length}">${people.map(person=>`<div class="panel-person"><img src="${esc(person.image)}" alt="${esc(person.name)}"><a href="creator.html?id=${esc(person.slug)}">${esc(person.name)}</a></div>`).join('')}</div>`}</div></div></section>`;
+}

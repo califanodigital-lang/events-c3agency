@@ -1,0 +1,6 @@
+@font-face{font-family:'All Round Gothic';src:url('assets/fonts/AllRoundGothic-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'All Round Gothic';src:url('assets/fonts/AllRoundGothic-Demi.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'All Round Gothic';src:url('assets/fonts/AllRoundGothic-Bold.ttf') format('truetype');font-weight:700 900;font-style:normal;font-display:swap}
+html body,button,input,select,textarea{font-family:'All Round Gothic',Arial,sans-serif}
+h1,h2,h3,.brand,.hero-stats b,.format-card span,.creator-placeholder,.roster-count,.method li>span,.logistics-list span,.territory-column>header>span,.cast-label b,.profile-monogram,.activity-tabs button span{font-family:'All Round Gothic',Arial,sans-serif!important;font-weight:700!important}
+.eyebrow,.button,.filters button,.creator span,.creator small,.back-link,.profile-meta,.activity-kicker,.activity-detail li{font-family:'All Round Gothic',Arial,sans-serif!important}

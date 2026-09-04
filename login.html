@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Area riservata | C3 Agency</title>
+  <link rel="stylesheet" href="fonts.css">
+  <style>
+    :root{--blue:#0b2d68;--yellow:#f2b408;--ink:#08152f}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 15% 15%,#416bb4 0 18%,transparent 19%),var(--blue);font-family:Manrope,Arial;color:var(--ink);padding:24px}.login{width:min(440px,100%);background:#fff;border-radius:26px;padding:38px;box-shadow:0 30px 80px #06183d}.login img{width:230px;max-width:80%;display:block;margin-bottom:40px}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#27539f;font-weight:800}.login h1{font:42px/.95 'Archivo Black';letter-spacing:-.05em;margin:10px 0 12px}.login p{color:#61708a;line-height:1.55;font-size:13px}.login label{display:block;margin:28px 0 8px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:800}.login input[type=email]{width:100%;padding:15px;border:1px solid #d7e0f1;border-radius:12px;font:600 15px Manrope}.password-field{position:relative}.password-field input{width:100%;padding:15px 56px 15px 15px;border:1px solid #d7e0f1;border-radius:12px;font:600 15px Manrope}.toggle-password{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:10px;background:#edf2fb;color:#27539f;cursor:pointer;font-size:19px;display:grid;place-items:center}.submit{width:100%;border:0;border-radius:999px;background:var(--yellow);padding:15px;font-weight:900;margin-top:14px;cursor:pointer}.error{min-height:20px;color:#a72a2a;font-size:12px;font-weight:700;margin-top:12px}.back{display:block;text-align:center;margin-top:22px;color:#27539f;font-size:11px;font-weight:800}
+  </style>
+</head>
+<body>
+  <form class="login" id="login">
+    <img src="assets/c3-agency-logo.png?v=3" alt="C3 Agency">
+    <span class="eyebrow">Area riservata</span>
+    <h1>Gestione del sito.</h1>
+    <p>Accedi con le credenziali C3 per modificare creator, attività, immagini e testi del sito.</p>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" required autofocus>
+    <label for="password">Password</label>
+    <div class="password-field"><input id="password" type="password" autocomplete="current-password" required><button class="toggle-password" id="toggle-password" type="button" aria-label="Mostra password" aria-pressed="false">◉</button></div>
+    <button class="submit">Accedi</button>
+    <div class="error" id="error" aria-live="polite"></div>
+    <a class="back" href="index.html">← Torna al sito</a>
+  </form>
+  <script src="supabase-config.js?v=1"></script>
+  <script src="c3-auth.js?v=1"></script>
+  <script>
+    const form=document.querySelector('#login'),error=document.querySelector('#error'),
+          email=document.querySelector('#email'),password=document.querySelector('#password'),
+          toggle=document.querySelector('#toggle-password'),submit=form.querySelector('.submit');
+
+    toggle.addEventListener('click',()=>{
+      const visible=password.type==='text';
+      password.type=visible?'password':'text';
+      toggle.setAttribute('aria-pressed',String(!visible));
+      toggle.setAttribute('aria-label',visible?'Mostra password':'Nascondi password');
+      toggle.textContent=visible?'\u25c9':'\u2298';
+    });
+
+    // Se la sessione è ancora valida si entra diretti.
+    C3Auth.session().then(s=>{ if(s) location.replace('admin.html'); });
+
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      error.textContent='';
+      submit.disabled=true; submit.textContent='Accesso in corso\u2026';
+      try{
+        await C3Auth.signIn(email.value.trim(),password.value);
+        location.replace('admin.html');
+      }catch(err){
+        error.textContent=/Invalid login/i.test(err.message)?'Email o password non corrette.':err.message;
+        submit.disabled=false; submit.textContent='Accedi';
+      }
+    });
+  </script>
+</body>
+</html>
