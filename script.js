@@ -1,3 +1,4 @@
+(window.C3_DATA_READY||Promise.resolve()).then(()=>{
 const creatorGrid=document.querySelector('.creator-grid');
 const savedRoster=localStorage.getItem('c3_creator_manager_data');
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
@@ -163,7 +164,7 @@ if(territoryRoot&&window.C3_GEO&&window.C3_CREATORS){
     <article class="territory-column territory-${area}">
       <header><span>${String(group.creators.length).padStart(2,'0')}</span><h3>${group.title}</h3><p>${group.subtitle}</p></header>
       <div class="territory-list">
-        ${group.creators.map(([slug,region])=>{
+        ${group.creators.filter(([slug])=>window.C3_CREATORS[slug]).map(([slug,region])=>{
           const creator=window.C3_CREATORS[slug];
           return `<a href="creator.html?id=${slug}"><span>${creator.name}</span><small>${region}</small><b aria-hidden="true">→</b></a>`;
         }).join('')}
@@ -181,13 +182,23 @@ if(contactForm&&whatsappButton){
     const data=new FormData(contactForm);
     return `Buongiorno C3 Agency,\n\nNome e ruolo: ${data.get('name')||'-'}\nEmail: ${data.get('email')||'-'}\nEvento: ${data.get('event')||'-'}\nCittà e location: ${data.get('city')||'-'}\nDate previste: ${data.get('dates')||'-'}\nAffluenza stimata: ${data.get('audience')||'-'}\nAree tematiche: ${data.get('areas')||'-'}\nBudget indicativo: ${data.get('budget')||'-'}\nCreator o format di interesse: ${data.get('interest')||'-'}\nRecapito telefonico: ${data.get('phone')||'-'}`;
   };
-  contactForm.addEventListener('submit',event=>{
+  contactForm.addEventListener('submit',async event=>{
     event.preventDefault();
     if(!contactForm.reportValidity()) return;
-    location.href=`mailto:${window.C3_SITE_CONTENT?.contactEmailTarget||'info@c3agency.it'}?subject=${encodeURIComponent('Richiesta creator per '+contactForm.elements.event.value)}&body=${encodeURIComponent(requestText())}`;
+    const submitButton=contactForm.querySelector('button[type="submit"]'),status=document.querySelector('#contact-status');
+    status.className='contact-status';status.textContent='Invio in corso…';submitButton.disabled=true;
+    const data=new FormData(contactForm),payload=Object.fromEntries(data.entries());
+    try{
+      if(!window.C3_SUPABASE)throw new Error('Servizio non disponibile');
+      const {data:result,error}=await window.C3_SUPABASE.functions.invoke('contact-request',{body:payload});
+      if(error||!result?.ok)throw error||new Error(result?.error||'Invio non riuscito');
+      contactForm.reset();status.className='contact-status is-success';status.textContent='Richiesta inviata correttamente. Ti ricontatteremo al più presto.';
+    }catch(error){console.error(error);status.className='contact-status is-error';status.textContent='Invio non riuscito. Riprova tra poco oppure utilizza WhatsApp.'}
+    finally{submitButton.disabled=false}
   });
   whatsappButton.addEventListener('click',()=>{
     if(!contactForm.reportValidity()) return;
     window.open(`https://wa.me/${(window.C3_SITE_CONTENT?.contactWhatsappTarget||'393513448497').replace(/\D/g,'')}?text=${encodeURIComponent(requestText())}`,'_blank','noopener');
   });
 }
+});

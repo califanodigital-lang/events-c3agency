@@ -1,3 +1,4 @@
+(window.C3_DATA_READY||Promise.resolve()).then(()=>{
 const slug = new URLSearchParams(location.search).get('id');
 const creator = window.C3_CREATORS[slug];
 const root = document.querySelector('#profile');
@@ -151,3 +152,4 @@ if (!creator) {
   };
   if(panel) tabs.forEach((tab,index)=>tab.addEventListener('click',()=>selectActivity(index)));
 }
+});
