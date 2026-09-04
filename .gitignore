@@ -2,3 +2,6 @@
 .DS_Store
 Thumbs.db
 *.zip
+
+# helper locale, non fa parte del sito
+pubblica-su-github.cmd
