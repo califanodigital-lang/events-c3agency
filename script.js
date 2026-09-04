@@ -182,10 +182,12 @@ if(contactForm&&whatsappButton){
   contactForm.addEventListener('submit',event=>{
     event.preventDefault();
     if(!contactForm.reportValidity()) return;
+    window.C3_SAVE_CONTACT&&window.C3_SAVE_CONTACT(contactForm);
     location.href=`mailto:${window.C3_SITE_CONTENT?.contactEmailTarget||'info@c3agency.it'}?subject=${encodeURIComponent('Richiesta creator per '+contactForm.elements.event.value)}&body=${encodeURIComponent(requestText())}`;
   });
   whatsappButton.addEventListener('click',()=>{
     if(!contactForm.reportValidity()) return;
+    window.C3_SAVE_CONTACT&&window.C3_SAVE_CONTACT(contactForm);
     window.open(`https://wa.me/${(window.C3_SITE_CONTENT?.contactWhatsappTarget||'393513448497').replace(/\D/g,'')}?text=${encodeURIComponent(requestText())}`,'_blank','noopener');
   });
 }

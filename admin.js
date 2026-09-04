@@ -100,6 +100,28 @@ document.querySelector('#password-form').addEventListener('submit',async event=>
 });
 document.querySelector('#logout').addEventListener('click',()=>{C3Auth.signOut().then(()=>location.replace('login.html'))});
 document.querySelectorAll('.admin-nav button').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.admin-nav button').forEach(item=>item.classList.toggle('active',item===button));document.querySelectorAll('.admin-panel').forEach(panel=>panel.classList.toggle('hidden',panel.dataset.panelContent!==button.dataset.panel));if(button.dataset.panel==='order')renderOrder()}));
+/* Ricarica sul database tutto quello che l'area riservata ha in memoria.
+   Serve al primo avvio (database vuoto, dati presi dai file del sito) e
+   ogni volta che si vuole riallineare tutto in un colpo solo. */
+document.querySelector('#sync').addEventListener('click',async()=>{
+  const button=document.querySelector('#sync');
+  if(!window.C3Auth||!C3Auth.configured()){setStatus(statusRoot,'Supabase non configurato.');return}
+  if(!confirm('Pubblicare su Supabase creator, panel e testi come sono adesso? Sostituisce quello che c\u2019\u00e8 online.'))return;
+  const etichetta=button.textContent;
+  button.disabled=true;button.textContent='Pubblicazione in corso\u2026';
+  try{
+    const creatorSalvati=await C3Auth.rpc('save_creators',{payload:creators});
+    const panelSalvati=await C3Auth.rpc('save_panels',{payload:panels});
+    await C3Auth.rpc('save_site_content',{payload:siteContent});
+    await C3Auth.rpc('save_setting',{p_key:'activity_macrocategories',p_value:macrocategories});
+    localStorage.removeItem('c3_payload_cache');
+    setStatus(statusRoot,`Pubblicato: ${creatorSalvati} creator, ${panelSalvati} panel e tutti i testi.`);
+  }catch(err){
+    setStatus(statusRoot,'Pubblicazione non riuscita: '+err.message);
+  }finally{
+    button.disabled=false;button.textContent=etichetta;
+  }
+});
 document.querySelector('#export').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({creators,siteContent,panels},null,2)],{type:'application/json'}),link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`c3-sito-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.append(link);link.click();setTimeout(()=>{URL.revokeObjectURL(link.href);link.remove()},1000);setStatus(statusRoot,'Backup completo esportato.')});
 document.querySelector('#import').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());creators=Array.isArray(data)?data:data.creators;if(!Array.isArray(creators))throw new Error();siteContent=data.siteContent||siteContent;panels=Array.isArray(data.panels)?data.panels:panels;saveCreators();savePanels();try{localStorage.setItem(CONTENT_KEY,JSON.stringify(siteContent))}catch(e){}C3Store.push('save_site_content',{payload:siteContent},statusRoot,'Backup importato');selectedSlug=creators[0]?.slug||'';selectedPanelSlug=panels[0]?.slug||'';renderList();renderPanelList();renderSiteForm();selectedSlug&&selectCreator(selectedSlug);selectedPanelSlug&&selectPanel(selectedPanelSlug);setStatus(statusRoot,'Backup completo importato.')}catch{setStatus(statusRoot,'Il file selezionato non è un backup valido.')}event.target.value=''});
 document.querySelector('#reset').addEventListener('click',()=>{if(!confirm('Ripristinare tutti i creator iniziali? Vale per il sito pubblicato, non solo per questo browser.'))return;localStorage.removeItem(CREATOR_KEY);creators=Object.values(window.C3_DEFAULT_CREATORS).map(item=>({...item,territories:defaultTerritories(item.slug)}));C3Store.push('save_creators',{payload:creators},statusRoot,'Creator iniziali ripristinati');setTimeout(()=>location.reload(),1200)});

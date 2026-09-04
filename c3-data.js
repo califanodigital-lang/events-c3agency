@@ -27,9 +27,19 @@
 
   function apply(data) {
     if (!data || typeof data !== 'object') return false;
-    if (data.creators && Object.keys(data.creators).length) {
-      window.C3_CREATORS = data.creators;
-      if (data.geo && Object.keys(data.geo).length) window.C3_GEO = data.geo;
+    // Creator e aree arrivano come array: l'ordine dentro un oggetto jsonb
+    // non è quello di inserimento, e sul sito l'ordine conta.
+    if (Array.isArray(data.creators) && data.creators.length) {
+      var map = {};
+      data.creators.forEach(function (c) { if (c && c.slug) map[c.slug] = c; });
+      window.C3_CREATORS = map;
+      if (Array.isArray(data.geo) && data.geo.length) {
+        var geo = {};
+        data.geo.forEach(function (a) {
+          if (a && a.key) geo[a.key] = { title: a.title, subtitle: a.subtitle, creators: a.creators || [] };
+        });
+        window.C3_GEO = geo;
+      }
     }
     if (Array.isArray(data.panels) && data.panels.length) window.C3_PANELS = data.panels;
     if (data.content && Object.keys(data.content).length) {
@@ -74,6 +84,30 @@
       return r.json();
     });
   }
+
+  /* Salva una richiesta dal form contatti. Il sito continua a funzionare
+     anche se fallisce: email e WhatsApp restano il canale principale. */
+  window.C3_SAVE_CONTACT = function (form) {
+    if (!cfg.url || !cfg.anonKey) return Promise.resolve(false);
+    var f = new FormData(form), v = function (k) { return (f.get(k) || '').toString().trim(); };
+    if (!v('name') || !v('email')) return Promise.resolve(false);
+    return fetch(cfg.url.replace(/\/+$/, '') + '/rest/v1/contact_requests', {
+      method: 'POST',
+      headers: {
+        'apikey': cfg.anonKey,
+        'Authorization': 'Bearer ' + cfg.anonKey,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        name: v('name'), email: v('email'), phone: v('phone'),
+        event_name: v('event'), city: v('city'), event_dates: v('dates'),
+        audience: v('audience') || null, areas: v('areas') || null,
+        budget: v('budget') || null, interest: v('interest') || null
+      })
+    }).then(function (r) { return r.ok; })
+      .catch(function (e) { console.warn('[C3] Richiesta non registrata sul database.', e); return false; });
+  };
 
   var cached = readCache();
 
