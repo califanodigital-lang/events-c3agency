@@ -1,16 +1,15 @@
-AGGIORNAMENTO CATEGORIE PANEL — TUTTI I CREATOR
+AGGIORNAMENTO FAVICON C3 AGENCY
 
-Carica tutti i file di questa cartella nella cartella principale del repository
-GitHub, sostituendo i file omonimi.
+Carica nella cartella principale del repository tutti i file e la cartella
+assets contenuti in questo aggiornamento, mantenendo la stessa struttura.
 
-Correzioni incluse:
-- le categorie assegnate dal pannello vengono mostrate nelle schede creator;
-- la correzione vale per tutti i creator, compresa Cristiana Nerdarte;
-- rimossa la vecchia regola speciale che ignorava le categorie personalizzate;
-- mantenute aggiunta, rinomina ed eliminazione delle macroaree;
-- impedito il ripristino automatico dei dati salvati;
-- aggiornate le versioni dei file per evitare la cache.
+La favicon è stata creata dal simbolo originale del logo C3 Agency nelle
+dimensioni 48, 192 e 512 pixel, oltre all'icona Apple da 180 pixel.
 
-Dopo la pubblicazione apri l'area riservata e premi Ctrl+F5.
-Per vedere una categoria nella scheda pubblica, almeno un'attività deve essere
-assegnata a quella categoria e poi il creator deve essere salvato.
+Dopo la pubblicazione verifica questi indirizzi:
+https://events.c3agency.it/assets/favicon-48.png
+https://events.c3agency.it/site.webmanifest
+
+La favicon può apparire subito nella scheda del browser. Nei risultati Google
+l'aggiornamento dipende dalla successiva scansione del sito e può richiedere
+alcuni giorni o settimane.
