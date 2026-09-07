@@ -170,6 +170,32 @@ if(territoryRoot&&window.C3_GEO&&window.C3_CREATORS){
         }).join('')}
       </div>
     </article>`).join('');
+
+  const territoryCards=[...territoryRoot.querySelectorAll('.territory-column')];
+  const territoryStatus=document.querySelector('.territory-carousel-status');
+  const territoryButtons=[...document.querySelectorAll('[data-territory-scroll]')];
+  let activeTerritory=0;
+  const updateTerritoryControls=()=>{
+    if(territoryStatus) territoryStatus.textContent=`${activeTerritory+1} / ${territoryCards.length}`;
+    territoryButtons.forEach(button=>{
+      button.disabled=button.dataset.territoryScroll==='previous'?activeTerritory===0:activeTerritory===territoryCards.length-1;
+    });
+  };
+  const showTerritory=index=>{
+    if(!territoryCards.length)return;
+    activeTerritory=Math.max(0,Math.min(index,territoryCards.length-1));
+    territoryRoot.scrollTo({left:territoryCards[activeTerritory].offsetLeft-territoryRoot.offsetLeft,behavior:'smooth'});
+    updateTerritoryControls();
+  };
+  territoryButtons.forEach(button=>button.addEventListener('click',()=>showTerritory(activeTerritory+(button.dataset.territoryScroll==='next'?1:-1))));
+  territoryRoot.addEventListener('scroll',()=>{
+    clearTimeout(territoryRoot.territoryScrollTimer);
+    territoryRoot.territoryScrollTimer=setTimeout(()=>{
+      activeTerritory=territoryCards.reduce((best,card,index)=>Math.abs(card.offsetLeft-territoryRoot.offsetLeft-territoryRoot.scrollLeft)<Math.abs(territoryCards[best].offsetLeft-territoryRoot.offsetLeft-territoryRoot.scrollLeft)?index:best,0);
+      updateTerritoryControls();
+    },100);
+  },{passive:true});
+  updateTerritoryControls();
 }
 
 const contactForm=document.querySelector('#contact-form');
