@@ -78,9 +78,10 @@ const rosterGrid=document.querySelector('.creator-grid');
 const rosterPagination=document.createElement('nav');
 rosterPagination.className='roster-pagination';
 rosterPagination.setAttribute('aria-label','Pagine del roster');
-rosterPagination.innerHTML='<button type="button" data-page="previous" aria-label="Creator precedenti">←</button><span aria-live="polite"></span><button type="button" data-page="next" aria-label="Creator successivi">→</button>';
+rosterPagination.innerHTML='<div class="roster-swipe-hint" aria-hidden="true">Scorri i creator</div><button type="button" data-page="previous" aria-label="Creator precedenti">←</button><span aria-live="polite"></span><button type="button" data-page="next" aria-label="Creator successivi">→</button>';
 if(rosterGrid)rosterGrid.after(rosterPagination);
 let rosterFilter='all',rosterPage=0;
+let rosterAutoTimer;
 const rosterColumns=()=>innerWidth<=760?1:innerWidth<=1100?2:3;
 const renderRosterPage=()=>{
   const matches=cards.filter(card=>rosterFilter==='all'||card.dataset.tags.split(' ').includes(rosterFilter));
@@ -93,11 +94,22 @@ const renderRosterPage=()=>{
   rosterPagination.querySelector('[data-page="next"]').disabled=rosterPage>=totalPages-1;
   rosterPagination.hidden=totalPages<=1;
 };
+const startRosterAutoplay=()=>{
+  clearInterval(rosterAutoTimer);
+  if(innerWidth>760||matchMedia('(prefers-reduced-motion: reduce)').matches||document.hidden)return;
+  rosterAutoTimer=setInterval(()=>{
+    const matches=cards.filter(card=>rosterFilter==='all'||card.dataset.tags.split(' ').includes(rosterFilter));
+    if(matches.length<2)return;
+    rosterPage=(rosterPage+1)%matches.length;
+    renderRosterPage();
+  },4200);
+};
 rosterPagination.addEventListener('click',event=>{
   const button=event.target.closest('button[data-page]');
   if(!button)return;
   rosterPage+=button.dataset.page==='next'?1:-1;
   renderRosterPage();
+  startRosterAutoplay();
   document.querySelector('#creator .filters').scrollIntoView({behavior:'smooth',block:'start'});
 });
 let rosterTouchStartX=0,rosterTouchStartY=0;
@@ -112,10 +124,11 @@ rosterGrid?.addEventListener('touchend',event=>{
   if(Math.abs(deltaX)<55||Math.abs(deltaX)<=Math.abs(deltaY))return;
   const direction=deltaX<0?1:-1;
   const nextButton=rosterPagination.querySelector(direction>0?'[data-page="next"]':'[data-page="previous"]');
-  if(!nextButton.disabled){rosterPage+=direction;renderRosterPage();}
+  if(!nextButton.disabled){rosterPage+=direction;renderRosterPage();startRosterAutoplay();}
 },{passive:true});
 let rosterResizeTimer;
-addEventListener('resize',()=>{clearTimeout(rosterResizeTimer);rosterResizeTimer=setTimeout(renderRosterPage,160)});
+addEventListener('resize',()=>{clearTimeout(rosterResizeTimer);rosterResizeTimer=setTimeout(()=>{renderRosterPage();startRosterAutoplay()},160)});
+document.addEventListener('visibilitychange',startRosterAutoplay);
 const topbar=document.querySelector('.topbar');
 if(topbar){
   let previousScroll=window.scrollY;
@@ -136,8 +149,10 @@ buttons.forEach(button=>button.addEventListener('click',()=>{
   rosterFilter=button.dataset.filter;
   rosterPage=0;
   renderRosterPage();
+  startRosterAutoplay();
 }));
 renderRosterPage();
+startRosterAutoplay();
 
 const slugify = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
 cards.forEach(card=>{
