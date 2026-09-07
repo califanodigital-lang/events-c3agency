@@ -81,10 +81,10 @@ rosterPagination.setAttribute('aria-label','Pagine del roster');
 rosterPagination.innerHTML='<button type="button" data-page="previous" aria-label="Creator precedenti">←</button><span aria-live="polite"></span><button type="button" data-page="next" aria-label="Creator successivi">→</button>';
 if(rosterGrid)rosterGrid.after(rosterPagination);
 let rosterFilter='all',rosterPage=0;
-const rosterColumns=()=>innerWidth<=680?1:innerWidth<=1100?2:3;
+const rosterColumns=()=>innerWidth<=760?1:innerWidth<=1100?2:3;
 const renderRosterPage=()=>{
   const matches=cards.filter(card=>rosterFilter==='all'||card.dataset.tags.split(' ').includes(rosterFilter));
-  const pageSize=rosterColumns()*3,totalPages=Math.max(1,Math.ceil(matches.length/pageSize));
+  const pageSize=innerWidth<=760?1:rosterColumns()*3,totalPages=Math.max(1,Math.ceil(matches.length/pageSize));
   rosterPage=Math.min(rosterPage,totalPages-1);
   cards.forEach(card=>card.classList.add('hidden'));
   matches.slice(rosterPage*pageSize,(rosterPage+1)*pageSize).forEach(card=>card.classList.remove('hidden'));
@@ -100,6 +100,20 @@ rosterPagination.addEventListener('click',event=>{
   renderRosterPage();
   document.querySelector('#creator .filters').scrollIntoView({behavior:'smooth',block:'start'});
 });
+let rosterTouchStartX=0,rosterTouchStartY=0;
+rosterGrid?.addEventListener('touchstart',event=>{
+  rosterTouchStartX=event.changedTouches[0].clientX;
+  rosterTouchStartY=event.changedTouches[0].clientY;
+},{passive:true});
+rosterGrid?.addEventListener('touchend',event=>{
+  if(innerWidth>760)return;
+  const deltaX=event.changedTouches[0].clientX-rosterTouchStartX;
+  const deltaY=event.changedTouches[0].clientY-rosterTouchStartY;
+  if(Math.abs(deltaX)<55||Math.abs(deltaX)<=Math.abs(deltaY))return;
+  const direction=deltaX<0?1:-1;
+  const nextButton=rosterPagination.querySelector(direction>0?'[data-page="next"]':'[data-page="previous"]');
+  if(!nextButton.disabled){rosterPage+=direction;renderRosterPage();}
+},{passive:true});
 let rosterResizeTimer;
 addEventListener('resize',()=>{clearTimeout(rosterResizeTimer);rosterResizeTimer=setTimeout(renderRosterPage,160)});
 const topbar=document.querySelector('.topbar');
