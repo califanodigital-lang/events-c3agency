@@ -98,14 +98,14 @@ if (!creator) {
   document.title = 'Creator non trovato | C3 Agency';
   root.innerHTML = `<section class="profile-error"><p class="eyebrow">Profilo non trovato</p><h1>Questo creator non è disponibile.</h1><a class="button" href="index.html#creator">Torna al roster</a></section>`;
 } else {
-  document.title = `${creator.name} | C3 Agency`;
-  const seoDescription = `${creator.name}: ${creator.description}`.slice(0, 300);
+  document.title = `${creator.name}: creator per fiere ed eventi | C3 Agency`;
+  const seoDescription = `${creator.name}, creator C3 Agency per fiere, festival ed eventi: ${creator.description}`.slice(0, 300);
   const canonicalUrl = `https://events.c3agency.it/creator.html?id=${encodeURIComponent(creator.slug)}`;
   const absoluteImage = new URL(creator.image || 'assets/c3-agency-logo.png', canonicalUrl).href;
   document.querySelector('meta[name="description"]').content = seoDescription;
   document.querySelector('link[rel="canonical"]').href = canonicalUrl;
   const setMeta=(selector,value,attribute='content')=>{const node=document.querySelector(selector);if(node)node.setAttribute(attribute,value)};
-  setMeta('meta[property="og:title"]',`${creator.name} | C3 Agency`);
+  setMeta('meta[property="og:title"]',`${creator.name}: creator per fiere ed eventi | C3 Agency`);
   setMeta('meta[property="og:description"]',seoDescription);
   setMeta('meta[property="og:url"]',canonicalUrl);
   let ogImage=document.querySelector('meta[property="og:image"]');

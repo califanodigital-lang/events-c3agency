@@ -2,4 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /login.html
+Disallow: /mobile-preview.html
+Disallow: /index-proposta.html
 Sitemap: https://events.c3agency.it/sitemap.xml
