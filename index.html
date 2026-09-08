@@ -280,6 +280,56 @@
     #format .format-card b{grid-column:2;justify-self:start;margin:13px 0 0;padding:0;border:0;color:#27539f!important;font-size:9px;letter-spacing:.1em}
     @media(max-width:760px){.proposal-b .section#format{padding-top:58px;padding-bottom:48px}#format .format-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-bottom:1px solid #b9c7df;scrollbar-width:none}#format .format-grid::-webkit-scrollbar{display:none}.proposal-b #format .format-card,.proposal-b #format .format-card:nth-child(n){flex:0 0 84%;min-height:166px;padding:22px 18px;grid-template-columns:35px 1fr;scroll-snap-align:start;border-right:1px solid #b9c7df;border-bottom:0}.proposal-b #format .format-card:last-child{border-right:0}#format .format-card h3{margin:0 0 7px;font-size:25px}}
   </style>
+  <style>
+    /* Desktop: raccordi morbidi e segni grafici ispirati al logo */
+    @media(min-width:761px){
+      .proposal-b .section#format{position:relative;padding-top:108px;padding-bottom:104px;background:linear-gradient(145deg,#f8faff 0%,#edf3fc 58%,#f7f9ff 100%);overflow:hidden}
+      .proposal-b .section#format:after{content:"";position:absolute;right:-105px;top:42px;width:310px;height:310px;border:24px solid rgba(39,83,159,.07);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;box-shadow:0 0 0 34px rgba(39,83,159,.035),0 0 0 68px rgba(242,180,8,.055);transform:rotate(18deg);pointer-events:none}
+      #format .section-head,#format .format-grid{position:relative;z-index:1}
+      #format .section-head{align-items:end;margin-bottom:44px}
+      #format .section-head>p{max-width:500px;padding:0 0 7px 24px;border-left:3px solid #f2b408;color:#43536d}
+      #format .format-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;border:0}
+      .proposal-b #format .format-card,.proposal-b #format .format-card:nth-child(n){min-height:154px;padding:24px 28px;grid-template-columns:43px 1fr;background:rgba(255,255,255,.82);border:1px solid rgba(39,83,159,.14);border-radius:26px 26px 26px 8px;box-shadow:0 12px 34px rgba(8,21,47,.055);transition:transform .25s ease,box-shadow .25s ease,background .25s ease}
+      .proposal-b #format .format-card:nth-child(even){border-radius:26px 26px 8px 26px}
+      .proposal-b #format .format-card:hover{background:#fff;transform:translateY(-3px);box-shadow:0 18px 40px rgba(8,21,47,.09)}
+      #format .format-card>span{display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid rgba(39,83,159,.3);border-radius:50%;font-size:10px}
+      #format .format-card h3{font-size:clamp(24px,2vw,31px)}
+      .seo-faq{position:relative;padding-top:110px;padding-bottom:110px;background:linear-gradient(180deg,#f4f0e8 0%,#faf8f3 100%);border-radius:88px 88px 0 0;overflow:hidden}
+      .seo-faq:before{content:"";position:absolute;left:-92px;bottom:-100px;width:275px;height:275px;border:20px solid rgba(242,180,8,.11);border-right-color:transparent;border-top-color:transparent;border-radius:50%;box-shadow:0 0 0 30px rgba(39,83,159,.045),0 0 0 60px rgba(242,180,8,.035);transform:rotate(12deg)}
+      .seo-faq-inner{position:relative;z-index:1;max-width:1020px}
+      .seo-faq .eyebrow,.seo-faq h2{text-align:center}
+      .seo-faq h2{max-width:720px;margin:0 auto 54px}
+      .faq-chat{gap:18px}
+      .chat-row{grid-template-columns:minmax(220px,34%) minmax(0,66%);gap:20px}
+      .chat-row:nth-child(even){grid-template-columns:minmax(0,66%) minmax(220px,34%)}
+      .chat-row:nth-child(even) .chat-question{grid-column:2;grid-row:1;border-bottom-left-radius:22px;border-bottom-right-radius:5px}
+      .chat-row:nth-child(even) .chat-question:after{left:auto;right:0;border-width:10px 0 0 10px}
+      .chat-row:nth-child(even) .chat-answer{grid-column:1;grid-row:1;border-bottom-right-radius:22px;border-bottom-left-radius:5px}
+      .chat-row:nth-child(even) .chat-answer:after{right:auto;left:0;border-width:10px 10px 0 0}
+      .chat-question,.chat-answer{box-shadow:0 12px 30px rgba(8,21,47,.06)}
+    }
+    /* Tutte le dimensioni: gli stati attivi restano sempre leggibili */
+    .proposal-b #format .format-card:nth-child(n):hover{background:#fff;color:#08152f}
+    .proposal-b #format .format-card:nth-child(n):hover h3{color:#08152f}
+    .proposal-b #format .format-card:nth-child(n):hover p{color:#43536d!important}
+    .proposal-b #format .format-card:nth-child(n):hover b{color:#27539f!important}
+    .proposal-b #format .format-card:nth-child(n):hover>span{color:#27539f;border-color:#f2b408;background:#fff8df}
+    @media(max-width:760px){
+      .proposal-b .section#format{position:relative;background:linear-gradient(155deg,#f8faff 0%,#edf3fc 100%);overflow:hidden}
+      .proposal-b .section#format:after{content:"";position:absolute;right:-72px;top:28px;width:176px;height:176px;border:15px solid rgba(39,83,159,.065);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;box-shadow:0 0 0 22px rgba(242,180,8,.045);transform:rotate(18deg);pointer-events:none}
+      #format .section-head,#format .format-grid{position:relative;z-index:1}
+      #format .section-head>p{padding-left:15px;border-left:3px solid #f2b408}
+      #format .format-grid{gap:12px;border:0;padding:3px 20px 18px 0;scroll-padding-left:0}
+      .proposal-b #format .format-card,.proposal-b #format .format-card:nth-child(n){flex-basis:82%;min-height:174px;background:rgba(255,255,255,.9);color:#08152f;border:1px solid rgba(39,83,159,.15);border-radius:24px 24px 24px 7px;box-shadow:0 10px 26px rgba(8,21,47,.055)}
+      .proposal-b #format .format-card:nth-child(even){border-radius:24px 24px 7px 24px}
+      #format .format-card>span{display:grid;place-items:center;width:30px;height:30px;padding:0;border:1px solid rgba(39,83,159,.3);border-radius:50%;font-size:9px}
+      #format .format-card p{color:#53627b!important}
+      .seo-faq{position:relative;padding-top:66px;padding-bottom:66px;border-radius:44px 44px 0 0;background:linear-gradient(180deg,#f4f0e8 0%,#faf8f3 100%);overflow:hidden}
+      .seo-faq:before{content:"";position:absolute;left:-62px;bottom:-70px;width:160px;height:160px;border:13px solid rgba(242,180,8,.09);border-right-color:transparent;border-top-color:transparent;border-radius:50%;box-shadow:0 0 0 20px rgba(39,83,159,.035);pointer-events:none}
+      .seo-faq-inner{position:relative;z-index:1}
+      .chat-question,.chat-answer{box-shadow:0 8px 22px rgba(8,21,47,.055)}
+    }
+  </style>
 </head>
 <body class="proposal-b">
   <header class="topbar">
