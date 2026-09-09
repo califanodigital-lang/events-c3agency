@@ -1,14 +1,14 @@
-AGGIORNAMENTO C3 AGENCY EVENTS — v19
+AGGIORNAMENTO DEFINITIVO AREA RISERVATA
 
-1. Apri il repository GitHub del sito.
-2. Carica nella cartella principale tutti i file presenti in questa cartella.
-3. Quando GitHub chiede cosa fare con i file omonimi, conferma la sostituzione.
-4. Conferma con “Commit changes”.
-5. Attendi il completamento della pubblicazione e apri https://events.c3agency.it/?v=19
-6. Controlla la sezione Format e le Domande frequenti anche da cellulare.
+Carica admin.html e admin.js nella cartella principale del repository GitHub e conferma la sostituzione.
 
-Non occorre modificare Supabase per questo aggiornamento grafico.
+Include:
+- una sola sezione social;
+- piattaforme precompilate con icone automatiche;
+- elenco dei social assegnati;
+- aggiornamento e rimozione dei social;
+- ordinamento dei panel/attività di ogni creator;
+- mantenimento dell’ordinamento dei panel condivisi;
+- salvataggio tramite Supabase.
 
-Dopo la pubblicazione, in Google Search Console controlla la homepage e premi
-“Richiedi indicizzazione”. Non è necessario reinviare la sitemap se risulta già
-letta correttamente, ma è possibile farlo senza conseguenze.
+Dopo il caricamento, aggiorna la pagina forzatamente oppure aprila in navigazione privata per evitare la vecchia copia in cache.
