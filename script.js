@@ -34,6 +34,19 @@ const creatorTags=creator=>{
   const value=`${creator.category} ${(creator.activities||[]).map(item=>typeof item==='string'?item:item.title).join(' ')}`.toLowerCase();
   return [/(fantasy|tolkien|harry potter|mitologia|folklore)/.test(value)&&'fantasy',/(panel|talk|hosting|moderazione|pop culture|cinema|serie)/.test(value)&&'pop',/(cosplay|prop)/.test(value)&&'cosplay',/(gaming|videogioco|videogame|esport)/.test(value)&&'gaming',/(gdr|gdt|gioco di ruolo|giochi di ruolo|gioco da tavolo|giochi da tavolo|boardgame)/.test(value)&&'gdr-gdt',/(music|musica|concerto|canto|performance|j-pop|k-pop|rock)/.test(value)&&'musica',/(divulgazione|storia|arte|tech|psicologia|soccorso|lezione|educazione)/.test(value)&&'divulgazione'].filter(Boolean).join(' ')||'pop';
 };
+const creatorCardMeta=creator=>{
+  const fallback=window.C3_DEFAULT_CREATORS?.[creator.slug]||{};
+  const raw=String(creator.meta||fallback.meta||'').trim();
+  const savedRegions=(creator.territories||[]).map(item=>item.region).filter(Boolean);
+  const geoRegions=[...Object.values(window.C3_DEFAULT_GEO||{}),...Object.values(window.C3_GEO||{})].flatMap(group=>(group.creators||[]).filter(item=>item[0]===creator.slug).map(item=>item[1]));
+  const regions=[...new Set([...savedRegions,...geoRegions])];
+  const territory=regions.join(' / ');
+  const parts=[];
+  if(territory&&!regions.some(region=>raw.toLocaleLowerCase('it').includes(String(region).toLocaleLowerCase('it'))))parts.push(territory);
+  if(raw)parts.push(raw);
+  if(!/(target|pubblico|audience|giovan|famiglie|trasversale|adulti|teen)/i.test(parts.join(' ')))parts.push('target trasversale');
+  return parts.join(' · ')||'Italia · target trasversale';
+};
 
 const heroCast=document.querySelector('.hero-cast');
 if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -74,7 +87,7 @@ if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: re
   document.addEventListener('visibilitychange',()=>document.hidden?stopHeroRotation():startHeroRotation());
 }
 if(creatorGrid&&window.C3_CREATORS){
-  creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creator.image?`<img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}">`:`<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`}<div><span>${escapeHtml(creator.category)}</span><h3>${escapeHtml(creator.name)}</h3><p>${escapeHtml(creator.description)}</p><small>${escapeHtml(creator.meta)}</small></div></article>`).join('');
+  creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creator.image?`<img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}">`:`<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`}<div><span>${escapeHtml(creator.category)}</span><h3>${escapeHtml(creator.name)}</h3><p>${escapeHtml(creator.description)}</p><small>${escapeHtml(creatorCardMeta(creator))}</small></div></article>`).join('');
   const count=document.querySelector('.roster-count');
   if(count) count.textContent=`${Object.keys(window.C3_CREATORS).length} CREATOR · UN UNICO PARTNER`;
 }
