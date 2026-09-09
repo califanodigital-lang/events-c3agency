@@ -266,6 +266,7 @@
     html,body{max-width:100%;overflow-x:clip}
     /* Format: composizione editoriale compatta, senza effetto pulsante/card */
     .proposal-b .section#format{padding-top:88px;padding-bottom:76px;background:#f7f9ff}
+    .proposal-b .section#format:before{display:none}
     #format .section-head{max-width:820px}
     #format .section-head>p{max-width:680px;margin-bottom:0}
     #format .format-seo-text{max-width:760px;margin:18px 0 38px;padding:0;border:0;color:#53627b;font-size:15px;line-height:1.65}
@@ -287,7 +288,7 @@
       .proposal-b .section#format:after{content:"";position:absolute;right:-105px;top:42px;width:310px;height:310px;border:24px solid rgba(39,83,159,.07);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;box-shadow:0 0 0 34px rgba(39,83,159,.035),0 0 0 68px rgba(242,180,8,.055);transform:rotate(18deg);pointer-events:none}
       #format .section-head,#format .format-grid{position:relative;z-index:1}
       #format .section-head{align-items:end;margin-bottom:44px}
-      #format .section-head>p{max-width:500px;padding:0 0 7px 24px;border-left:3px solid #f2b408;color:#43536d}
+      #format .section-head>p{max-width:500px;padding:0 0 7px;color:#43536d}
       #format .format-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;border:0}
       .proposal-b #format .format-card,.proposal-b #format .format-card:nth-child(n){min-height:154px;padding:24px 28px;grid-template-columns:43px 1fr;background:rgba(255,255,255,.82);border:1px solid rgba(39,83,159,.14);border-radius:26px 26px 26px 8px;box-shadow:0 12px 34px rgba(8,21,47,.055);transition:transform .25s ease,box-shadow .25s ease,background .25s ease}
       .proposal-b #format .format-card:nth-child(even){border-radius:26px 26px 8px 26px}
@@ -318,7 +319,7 @@
       .proposal-b .section#format{position:relative;background:linear-gradient(155deg,#f8faff 0%,#edf3fc 100%);overflow:hidden}
       .proposal-b .section#format:after{content:"";position:absolute;right:-72px;top:28px;width:176px;height:176px;border:15px solid rgba(39,83,159,.065);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;box-shadow:0 0 0 22px rgba(242,180,8,.045);transform:rotate(18deg);pointer-events:none}
       #format .section-head,#format .format-grid{position:relative;z-index:1}
-      #format .section-head>p{padding-left:15px;border-left:3px solid #f2b408}
+      #format .section-head>p{padding-left:0;border-left:0}
       #format .format-grid{gap:12px;border:0;padding:3px 20px 18px 0;scroll-padding-left:0}
       .proposal-b #format .format-card,.proposal-b #format .format-card:nth-child(n){flex-basis:82%;min-height:174px;background:rgba(255,255,255,.9);color:#08152f;border:1px solid rgba(39,83,159,.15);border-radius:24px 24px 24px 7px;box-shadow:0 10px 26px rgba(8,21,47,.055)}
       .proposal-b #format .format-card:nth-child(even){border-radius:24px 24px 7px 24px}

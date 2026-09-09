@@ -48,6 +48,16 @@
   </style>
   <style>.company-footer{display:grid;grid-template-columns:1.1fr 1.5fr 1fr auto;gap:28px;align-items:start;padding:38px 4vw;text-transform:none;letter-spacing:0}.company-footer strong{font-size:13px;color:#f2b408}.company-footer span,.company-footer a{font-size:11px;line-height:1.55}.company-footer a{border-bottom:1px solid rgba(255,255,255,.4)}@media(max-width:850px){.company-footer{grid-template-columns:1fr 1fr}}@media(max-width:520px){.company-footer{grid-template-columns:1fr;gap:12px}}</style>
   <style>.profile-media img[src$="golgota.jpg"]{transform:scale(1.28)}.profile-media img[src$="pepiyos.jpg"]{object-fit:contain;background:#0b2d68}.profile-header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);border-bottom-color:rgba(39,83,159,.16);color:#08152f;box-shadow:0 8px 28px rgba(8,21,47,.07);transition:background .35s ease,box-shadow .35s ease,border-color .35s ease}.profile-logo{background:transparent;border-radius:0;padding:0;transition:opacity .25s ease,transform .35s cubic-bezier(.2,.8,.2,1)}.back-link{color:#08152f;transition:opacity .25s ease,transform .35s cubic-bezier(.2,.8,.2,1),color .2s}.back-link:hover{color:#27539f}.profile-header.is-hidden{background:transparent;border-color:transparent;box-shadow:none;pointer-events:none}.profile-header.is-hidden .back-link,.profile-header.is-hidden .profile-logo{opacity:0;transform:translateY(-24px);pointer-events:none}</style>
+  <style>
+    .profile-socials{position:relative;padding:54px 5vw;background:#eef3fc;text-align:center;overflow:hidden}
+    .profile-socials .eyebrow{margin-bottom:10px}.profile-socials h2{font:clamp(30px,4vw,54px)/1 'Archivo Black';letter-spacing:-.045em;margin:0 0 26px;color:#08152f}.social-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.social-link{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:11px 17px;border:1px solid rgba(39,83,159,.22);border-radius:999px;background:#fff;color:#27539f;text-decoration:none;font-size:12px;font-weight:800;box-shadow:0 8px 24px rgba(8,21,47,.055);transition:transform .2s ease,background .2s ease,color .2s ease}.social-link:before{content:'↗';display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#f2b408;color:#08152f;font-size:12px}.social-link:hover{transform:translateY(-2px);background:#27539f;color:#fff}@media(max-width:600px){.profile-socials{padding:44px 20px}.social-links{gap:8px}.social-link{flex:1 1 calc(50% - 8px);justify-content:center;padding:10px 12px}}
+  </style>
+  <style>
+    .social-link:before{display:none}
+    .social-icon{width:25px;height:25px;flex:0 0 25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .social-icon .social-icon-fill{fill:currentColor;stroke:none}
+    .social-link:hover .social-icon{color:#f2b408}
+  </style>
 </head>
 <body class="profile-page">
   <header class="profile-header">
@@ -58,7 +68,7 @@
   <footer class="company-footer"><strong>C3 Agency SRL</strong><span>Via Roma 30<br>81022 Casagiove (CE)</span><span>P. IVA 04959500614<br>PEC: C3agency@pec.it</span><a href="index.html#contatti">Contattaci</a></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
 <script src="supabase-config.js"></script><script src="supabase-client.js"></script>
-<script src="creators.js?v=11"></script><script src="site-content.js?v=6"></script><script src="data-backend.js?v=3"></script>
-<script src="creator.js?v=15"></script><script src="analytics-config.js"></script><script src="cookie-consent.js"></script>
+<script src="creators.js?v=11"></script><script src="creator-socials.js?v=1"></script><script src="site-content.js?v=6"></script><script src="data-backend.js?v=3"></script>
+<script src="creator.js?v=17"></script><script src="analytics-config.js"></script><script src="cookie-consent.js"></script>
 </body>
 </html>

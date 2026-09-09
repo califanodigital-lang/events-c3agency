@@ -1,14 +1,43 @@
-AGGIORNAMENTO DEFINITIVO AREA RISERVATA
+PACCHETTO COMPLETO DEGLI AGGIORNAMENTI DI OGGI
 
-Carica admin.html e admin.js nella cartella principale del repository GitHub e conferma la sostituzione.
+Questo pacchetto sostituisce i pacchetti v23, v24, v25, v26 e v27.
+Non occorre caricare separatamente le versioni precedenti.
 
-Include:
-- una sola sezione social;
-- piattaforme precompilate con icone automatiche;
-- elenco dei social assegnati;
-- aggiornamento e rimozione dei social;
-- ordinamento dei panel/attività di ogni creator;
-- mantenimento dell’ordinamento dei panel condivisi;
-- salvataggio tramite Supabase.
+COME CARICARLO SU GITHUB
+1. Apri il repository collegato a events.c3agency.it.
+2. Apri la cartella principale del sito, dove si trova index.html.
+3. Carica insieme tutti i sette file presenti in questa cartella.
+4. Conferma la sostituzione dei file esistenti.
+5. creator-socials.js potrebbe risultare nuovo: conferma anche la sua aggiunta.
+6. Conferma il commit.
+7. Attendi il completamento della pubblicazione.
 
-Dopo il caricamento, aggiorna la pagina forzatamente oppure aprila in navigazione privata per evitare la vecchia copia in cache.
+FILE DA CARICARE
+- index.html
+- sitemap.xml
+- creator-socials.js
+- creator.html
+- creator.js
+- admin.html
+- admin.js
+
+MODIFICHE INCLUSE
+- rimozione della barra/linea gialla dalla sezione Format;
+- aggiornamento della sitemap con tutte le 37 schede creator;
+- collegamenti social nelle pagine creator;
+- icone specifiche di Instagram, TikTok, YouTube, Facebook, Twitch, Spotify e sito web;
+- piattaforme social precompilate nell’area riservata;
+- unica sezione per inserire, aggiornare e rimuovere i social;
+- ordine modificabile dei panel/attività di ogni creator;
+- ordine modificabile dei panel condivisi;
+- salvataggio dei dati tramite il backend Supabase già configurato.
+
+CONTROLLO DOPO LA PUBBLICAZIONE
+1. Apri https://events.c3agency.it/?v=28 in navigazione privata.
+2. Controlla che la linea gialla non compaia nella sezione Format.
+3. Apri una pagina creator e verifica icone e collegamenti social.
+4. Accedi all’area riservata e prova l’ordine di un panel senza modificare il testo.
+5. Premi Salva modifiche e ricarica la pagina creator per verificare il nuovo ordine.
+6. Reinvia https://events.c3agency.it/sitemap.xml in Google Search Console.
+
+Non sono richieste modifiche SQL o nuove funzioni Supabase.
