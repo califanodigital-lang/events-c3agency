@@ -58,14 +58,21 @@
     .social-icon .social-icon-fill{fill:currentColor;stroke:none}
     .social-link:hover .social-icon{color:#f2b408}
   </style>
-</head>
+<link rel="stylesheet" href="footer.css?v=2"></head>
 <body class="profile-page">
   <header class="profile-header">
     <a href="index.html#creator" class="profile-logo"><img src="assets/c3-agency-logo.png?v=3" alt="C3 Agency"></a>
     <a href="index.html#creator" class="back-link">← Tutti i creator</a>
   </header>
   <main id="profile" class="profile-shell" aria-live="polite"></main>
-  <footer class="company-footer"><strong>C3 Agency SRL</strong><span>Via Roma 30<br>81022 Casagiove (CE)</span><span>P. IVA 04959500614<br>PEC: C3agency@pec.it</span><a href="index.html#contatti">Contattaci</a></footer>
+  <footer class="company-footer">
+  <div class="footer-main">
+    <div class="footer-brand"><a href="index.html#home" aria-label="C3 Agency, torna all'inizio"><img src="assets/c3-agency-logo.png?v=3" alt="C3 Agency"></a><p>Creator, ospiti e format per fiere, festival ed eventi in tutta Italia.</p><a class="footer-contact" href="index.html#contatti">Parliamo del tuo evento ↗</a></div>
+    <div class="footer-column"><h2>Dove siamo</h2><span>Via Roma 30<br>81022 Casagiove (CE)</span><span>P. IVA 04959500614<br>PEC: C3agency@pec.it</span></div>
+    <nav class="footer-column footer-links" aria-label="Link utili"><h2>Link utili</h2><a href="privacy.html">Privacy</a><a href="cookie-policy.html">Cookie policy</a><button class="cookie-settings-link" type="button" data-open-cookie-settings>Preferenze cookie</button></nav>
+  </div>
+  <div class="footer-bottom"><div class="footer-company-line"><small>© 2026</small> <strong>C3 Agency SRL</strong><small> · Tutti i diritti riservati</small></div><div class="footer-bottom-links"><a href="index.html#creator">Tutti i creator</a><a class="footer-top" href="index.html#home">Torna su ↑</a></div></div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
 <script src="supabase-config.js"></script><script src="supabase-client.js"></script>
 <script src="creators.js?v=11"></script><script src="creator-socials.js?v=1"></script><script src="site-content.js?v=6"></script><script src="data-backend.js?v=3"></script>
