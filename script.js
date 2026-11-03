@@ -5,11 +5,12 @@ const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;'
 if(window.C3_SITE_CONTENT){
   const formatCopyMigrations={
     formatText:{from:'Ogni proposta è acquistabile singolarmente oppure integrata in un pacchetto: più attività, un’unica regia editoriale e logistica.',to:'Panel, show, workshop e hosting per fiere del fumetto e festival nerd, anche in un unico palinsesto coordinato.'},
-    formatSeoText:{from:'C3 Agency progetta cast e palinsesti per fiere del fumetto, comics, festival nerd ed eventi pop culture in tutta Italia. Selezioniamo creator, presentatori, divulgatori, cosplayer, musicisti e performer in base al pubblico e agli obiettivi della manifestazione.',to:'Cast, ospiti e attività per fiere del fumetto e festival nerd, costruiti intorno al pubblico e agli obiettivi dell’evento.'}
+    formatSeoText:{from:'C3 Agency progetta cast e palinsesti per fiere del fumetto, comics, festival nerd ed eventi pop culture in tutta Italia. Selezioniamo creator, presentatori, divulgatori, cosplayer, musicisti e performer in base al pubblico e agli obiettivi della manifestazione.',to:'Cast, ospiti e attività per fiere del fumetto e festival nerd, costruiti intorno al pubblico e agli obiettivi dell’evento.'},
+    communityTitle:{from:'Passioni condivise. Spazi da vivere.',to:'Community che creano mondi.'}
   };
   Object.entries(formatCopyMigrations).forEach(([key,copy])=>{if(window.C3_SITE_CONTENT[key]===copy.from)window.C3_SITE_CONTENT[key]=copy.to});
   const contentMap={
-    navFormat:'.topbar nav a:nth-child(1)',navCreator:'.topbar nav a:nth-child(2)',navTerritory:'.topbar nav a:nth-child(3)',navMethod:'.topbar nav a:nth-child(4)',navLogistics:'.topbar nav a:nth-child(5)',headerCta:'.topbar>.button',
+    navCreator:'.topbar nav a:nth-child(1)',navPanel:'.topbar nav a:nth-child(2)',navCommunity:'.topbar nav a:nth-child(3)',navTerritory:'.topbar nav a:nth-child(4)',navContact:'.topbar nav a:nth-child(5)',headerCta:'.topbar>.button',
     heroEyebrow:'#home .hero-copy .eyebrow',heroTitle:'#home .hero-copy h1',heroLead:'#home .hero-copy .lead',heroPrimary:'#home .actions .button',heroSecondary:'#home .actions .text-link',heroLabel:'#home .cast-label b',
     formatEyebrow:'#format .section-head .eyebrow',formatTitle:'#format .section-head h2',formatText:'#format .section-head>p',formatSeoText:'#format .format-seo-text',format1Title:'#format .format-card:nth-child(1) h3',format1Text:'#format .format-card:nth-child(1) p',format1Tag:'#format .format-card:nth-child(1)>b',format2Title:'#format .format-card:nth-child(2) h3',format2Text:'#format .format-card:nth-child(2) p',format2Tag:'#format .format-card:nth-child(2)>b',format3Title:'#format .format-card:nth-child(3) h3',format3Text:'#format .format-card:nth-child(3) p',format3Tag:'#format .format-card:nth-child(3)>b',format4Title:'#format .format-card:nth-child(4) h3',format4Text:'#format .format-card:nth-child(4) p',format4Tag:'#format .format-card:nth-child(4)>b',
     rosterEyebrow:'#creator .section-head .eyebrow',rosterTitle:'#creator .section-head h2',rosterText:'#creator .section-head>p',filterAll:'.filters button:nth-child(1)',filterFantasy:'.filters button:nth-child(2)',filterGaming:'.filters button:nth-child(3)',filterCosplay:'.filters button:nth-child(5)',filterMusic:'.filters button:nth-child(6)',filterPop:'.filters button:nth-child(7)',
@@ -24,10 +25,33 @@ if(window.C3_SITE_CONTENT){
   contentMap.sharedPanelEyebrow='#panel-condivisi .section-head .eyebrow';
   contentMap.sharedPanelTitle='#panel-condivisi .section-head h2';
   contentMap.sharedPanelText='#panel-condivisi .section-head>p';
+  contentMap.communityEyebrow='#community .section-head .eyebrow';
+  contentMap.communityTitle='#community .section-head h2';
+  contentMap.communityText='#community .section-head>p';
   Object.entries(contentMap).forEach(([key,selector])=>{const node=document.querySelector(selector);if(node&&window.C3_SITE_CONTENT[key])node.textContent=window.C3_SITE_CONTENT[key]});
   const privacyNote=document.querySelector('.form-privacy');
   if(privacyNote){const label=window.C3_SITE_CONTENT.contactPrivacy||'I dati vengono utilizzati esclusivamente per rispondere alla richiesta.';privacyNote.innerHTML=`${escapeHtml(label)} <a href="privacy.html">Leggi l’informativa privacy</a>.`}
   ['heroImage1','heroImage2','heroImage3'].forEach((key,index)=>{const image=document.querySelectorAll('#home .cast-image img')[index];if(image&&window.C3_SITE_CONTENT[key])image.src=window.C3_SITE_CONTENT[key]});
+}
+const communityTrack=document.querySelector('#community-track');
+if(communityTrack&&Array.isArray(window.C3_COMMUNITIES)){
+  window.C3_COMMUNITIES=window.C3_COMMUNITIES.map(item=>{const initial=(window.C3_COMMUNITIES_DEFAULTS||[]).find(entry=>entry.slug===item.slug)||{};return {...initial,...item,thematicEnabled:item.slug==='skepsis-gaming'?false:item.thematicEnabled!==false,thematicAreas:Array.isArray(item.thematicAreas)?item.thematicAreas:(initial.thematicAreas||[])}});
+  communityTrack.innerHTML=window.C3_COMMUNITIES.map(community=>{
+    const tags=(community.activities||[]).map(activity=>`<span>${escapeHtml(activity)}</span>`).join('');
+    return `<article class="community-card" data-community="${escapeHtml(community.slug)}" role="button" tabindex="0" aria-label="Apri la scheda di ${escapeHtml(community.name)}"><div class="community-body"><img class="community-logo" src="${escapeHtml(community.logo)}" alt="Logo ${escapeHtml(community.name)}"><p class="eyebrow">${escapeHtml(community.eyebrow||'Community')}</p><h3>${escapeHtml(community.name)}</h3><p>${escapeHtml(community.description)}</p><div class="community-tags">${tags}</div><span class="community-open">Scopri cosa può fare <b>↗</b></span></div></article>`;
+  }).join('');
+  document.querySelectorAll('[data-community-scroll]').forEach(button=>button.addEventListener('click',()=>{
+    const card=communityTrack.querySelector('.community-card');
+    communityTrack.scrollBy({left:(card?.offsetWidth||600)*(button.dataset.communityScroll==='previous'?-1:1),behavior:'smooth'});
+  }));
+  const modal=document.createElement('div');modal.className='community-modal';modal.hidden=true;modal.innerHTML='<div class="community-modal-backdrop" data-community-close></div><section class="community-modal-panel" role="dialog" aria-modal="true" aria-labelledby="community-modal-title"><button class="community-modal-close" type="button" data-community-close aria-label="Chiudi">×</button><div id="community-modal-content"></div></section>';document.body.append(modal);
+  let modalGalleryIndex=0,activeCommunity=null;
+  const renderModalGallery=()=>{const root=modal.querySelector('.community-event-gallery'),images=activeCommunity?.gallery||[];if(!root)return;if(images.length){root.innerHTML=`<img src="${escapeHtml(images[modalGalleryIndex])}" alt="Evento di ${escapeHtml(activeCommunity.name)}"><div class="community-gallery-count">${modalGalleryIndex+1} / ${images.length}</div>`}else{root.innerHTML='<div class="community-gallery-placeholder"><span>Foto evento</span><small>Caricabile dall’area riservata</small></div>'}};
+  const openCommunity=slug=>{activeCommunity=window.C3_COMMUNITIES.find(item=>item.slug===slug);if(!activeCommunity)return;modalGalleryIndex=0;const activities=(activeCommunity.activities||[]).map(item=>`<li>${escapeHtml(item)}</li>`).join('');const thematicAreas=activeCommunity.thematicEnabled===false?'':(activeCommunity.thematicAreas||[]).map((area,index)=>`<article class="community-thematic-card"><div><span>Area tematica ${String(index+1).padStart(2,'0')}</span><h4>${escapeHtml(area.title||'Area personalizzabile')}</h4><p>${escapeHtml(area.description||'Contenuti e allestimento definibili insieme alla manifestazione.')}</p></div>${area.gallery?.[0]?`<img src="${escapeHtml(area.gallery[0])}" alt="${escapeHtml(area.title||'Area tematica')}">`:'<div class="community-thematic-placeholder">Foto area</div>'}</article>`).join('');modal.querySelector('#community-modal-content').innerHTML=`<div class="community-modal-head"><img src="${escapeHtml(activeCommunity.logo)}" alt="Logo ${escapeHtml(activeCommunity.name)}"><div><p class="eyebrow">${escapeHtml(activeCommunity.eyebrow||'Community')}</p><h2 id="community-modal-title">${escapeHtml(activeCommunity.name)}</h2></div></div><div class="community-modal-grid"><div class="community-modal-copy"><h3>Cosa può portare in fiera</h3><p>${escapeHtml(activeCommunity.details||activeCommunity.description)}</p><ul>${activities}</ul><a href="${escapeHtml(activeCommunity.instagram)}" target="_blank" rel="noopener">Apri la pagina Instagram ↗</a></div><div><div class="community-event-gallery"></div><div class="community-gallery-nav"><button type="button" data-community-gallery="previous" aria-label="Foto precedente">‹</button><span>Eventi e attività</span><button type="button" data-community-gallery="next" aria-label="Foto successiva">›</button></div></div></div>${thematicAreas?`<section class="community-thematic-section"><p class="eyebrow">Progetti su misura</p><h3>Aree tematiche realizzabili</h3><div class="community-thematic-grid">${thematicAreas}</div></section>`:''}`;renderModalGallery();modal.hidden=false;document.body.classList.add('modal-open');modal.querySelector('.community-modal-close').focus()};
+  communityTrack.addEventListener('click',event=>{const card=event.target.closest('.community-card');if(card)openCommunity(card.dataset.community)});
+  communityTrack.addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.closest('.community-card')){event.preventDefault();openCommunity(event.target.closest('.community-card').dataset.community)}});
+  modal.addEventListener('click',event=>{if(event.target.closest('[data-community-close]')){modal.hidden=true;document.body.classList.remove('modal-open');return}const button=event.target.closest('[data-community-gallery]');if(!button||!(activeCommunity?.gallery||[]).length)return;const length=activeCommunity.gallery.length;modalGalleryIndex=(modalGalleryIndex+(button.dataset.communityGallery==='previous'?-1:1)+length)%length;renderModalGallery()});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modal.hidden){modal.hidden=true;document.body.classList.remove('modal-open')}});
 }
 const creatorTags=creator=>{
   if(Array.isArray(creator.filters)&&creator.filters.length) return creator.filters.join(' ');
@@ -47,6 +71,8 @@ const creatorCardMeta=creator=>{
   if(!/(target|pubblico|audience|giovan|famiglie|trasversale|adulti|teen)/i.test(parts.join(' ')))parts.push('target trasversale');
   return parts.join(' · ')||'Italia · target trasversale';
 };
+const creatorPhotoPosition=creator=>`${creator.imagePositionX??50}% ${creator.imagePositionY??50}%`;
+const creatorPhotoMarkup=creator=>{if(!creator.image)return `<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`;const customized=creator.imagePositionX!=null||creator.imagePositionY!=null||creator.imageZoom!=null,position=creatorPhotoPosition(creator),zoom=(Number(creator.imageZoom)||100)/100,style=customized?` style="object-position:${position};transform-origin:${position};transform:scale(${zoom})"`:'';return `<div class="creator-photo"><img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}"${style}></div>`};
 
 const heroCast=document.querySelector('.hero-cast');
 if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -87,12 +113,17 @@ if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: re
   document.addEventListener('visibilitychange',()=>document.hidden?stopHeroRotation():startHeroRotation());
 }
 if(creatorGrid&&window.C3_CREATORS){
-  creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creator.image?`<img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}">`:`<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`}<div><span>${escapeHtml(creator.category)}</span><h3>${escapeHtml(creator.name)}</h3><p>${escapeHtml(creator.description)}</p><small>${escapeHtml(creatorCardMeta(creator))}</small></div></article>`).join('');
+  creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creatorPhotoMarkup(creator)}<div><span>${escapeHtml(creator.category)}</span><h3>${escapeHtml(creator.name)}</h3><p>${escapeHtml(creator.cardDescription||creator.description)}</p><small>${escapeHtml(creatorCardMeta(creator))}</small></div></article>`).join('');
   const count=document.querySelector('.roster-count');
   if(count) count.textContent=`${Object.keys(window.C3_CREATORS).length} CREATOR · UN UNICO PARTNER`;
 }
+const creatorFilterDefaults=[['fantasy','Fantasy'],['gaming','Gaming'],['gdr-gdt','GDR/GDT'],['cosplay','Cosplay'],['musica','Musica'],['pop','Pop culture'],['divulgazione','Divulgazione']].map(([slug,label])=>({slug,label}));
+const creatorFilterDefinitions=window.C3_REMOTE_CREATOR_FILTERS||JSON.parse(localStorage.getItem('c3_creator_filters')||'null')||creatorFilterDefaults;
+const creatorFilterBar=document.querySelector('#creator .filters');
+if(creatorFilterBar)creatorFilterBar.innerHTML=`<button class="active" data-filter="all">Tutti</button>${creatorFilterDefinitions.map(item=>`<button data-filter="${escapeHtml(item.slug)}">${escapeHtml(item.label)}</button>`).join('')}`;
 const buttons=[...document.querySelectorAll('.filters button')];
 const cards=[...document.querySelectorAll('.creator')];
+const creatorOrderCategories=window.C3_REMOTE_CREATOR_ORDERS||JSON.parse(localStorage.getItem('c3_creator_order_categories')||'null')||{};
 const rosterGrid=document.querySelector('.creator-grid');
 const rosterPagination=document.createElement('nav');
 rosterPagination.className='roster-pagination';
@@ -102,8 +133,10 @@ if(rosterGrid)rosterGrid.after(rosterPagination);
 let rosterFilter='all',rosterPage=0;
 let rosterAutoTimer;
 const rosterColumns=()=>innerWidth<=760?1:innerWidth<=1100?2:3;
+const matchingRosterCards=()=>{const matches=cards.filter(card=>rosterFilter==='all'||card.dataset.tags.split(' ').includes(rosterFilter)),saved=creatorOrderCategories[rosterFilter]||[];return [...matches].sort((a,b)=>{const ai=saved.indexOf(a.dataset.slug),bi=saved.indexOf(b.dataset.slug);return (ai<0?Number.MAX_SAFE_INTEGER:ai)-(bi<0?Number.MAX_SAFE_INTEGER:bi)})};
 const renderRosterPage=()=>{
-  const matches=cards.filter(card=>rosterFilter==='all'||card.dataset.tags.split(' ').includes(rosterFilter));
+  const matches=matchingRosterCards();
+  matches.forEach(card=>rosterGrid.append(card));
   const pageSize=innerWidth<=760?1:rosterColumns()*3,totalPages=Math.max(1,Math.ceil(matches.length/pageSize));
   rosterPage=Math.min(rosterPage,totalPages-1);
   cards.forEach(card=>card.classList.add('hidden'));
@@ -117,7 +150,7 @@ const startRosterAutoplay=()=>{
   clearInterval(rosterAutoTimer);
   if(innerWidth>760||matchMedia('(prefers-reduced-motion: reduce)').matches||document.hidden)return;
   rosterAutoTimer=setInterval(()=>{
-    const matches=cards.filter(card=>rosterFilter==='all'||card.dataset.tags.split(' ').includes(rosterFilter));
+    const matches=matchingRosterCards();
     if(matches.length<2)return;
     rosterPage=(rosterPage+1)%matches.length;
     renderRosterPage();
@@ -275,4 +308,10 @@ if(contactForm&&whatsappButton){
     window.open(`https://wa.me/${(window.C3_SITE_CONTENT?.contactWhatsappTarget||'393513448497').replace(/\D/g,'')}?text=${encodeURIComponent(requestText())}`,'_blank','noopener');
   });
 }
+const floatingContact=document.createElement('aside');floatingContact.className='floating-contact';floatingContact.setAttribute('aria-label','Contatto rapido');floatingContact.innerHTML='<a href="#contatti">Contattaci</a><button type="button" aria-label="Nascondi il contatto rapido">×</button>';document.body.append(floatingContact);
+let floatingContactDismissed=sessionStorage.getItem('c3_floating_contact_dismissed')==='1';
+const updateFloatingContact=()=>{const contact=document.querySelector('#contatti'),contactVisible=contact&&contact.getBoundingClientRect().top<innerHeight*.72;floatingContact.classList.toggle('is-visible',!floatingContactDismissed&&scrollY>Math.max(700,innerHeight*.85)&&!contactVisible)};
+addEventListener('scroll',updateFloatingContact,{passive:true});addEventListener('resize',updateFloatingContact);updateFloatingContact();
+floatingContact.querySelector('a').addEventListener('click',()=>floatingContact.classList.remove('is-visible'));
+floatingContact.querySelector('button').addEventListener('click',()=>{floatingContactDismissed=true;sessionStorage.setItem('c3_floating_contact_dismissed','1');floatingContact.remove()});
 });

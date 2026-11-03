@@ -30,8 +30,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=48">
   <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="community.css?v=7">
+  <link rel="stylesheet" href="community-tweaks.css?v=1">
   <style>
     :root{--ink:#08152f;--paper:#f7f9ff;--coral:#f2b408;--violet:#27539f;--acid:#f2b408;--line:rgba(8,21,47,.18)}
     .roster,.creator{background:#0b2d68}.creator-grid{background:#416bb4}.roster .section-head>p,.creator p{color:#dce7ff}.creator small{color:#aebfdf}.filters button{border-color:#6f8fc7}.cream{background:#fff}.hero-visual{background:#27539f}.contact{background:#27539f}
@@ -336,7 +338,7 @@
   <header class="topbar">
     <a class="brand official-brand" href="#home" aria-label="C3 Agency, torna all'inizio"><img src="assets/c3-agency-logo.png?v=3" alt="C3 Agency - Create. Communicate. Collaborate."></a>
     <nav aria-label="Navigazione principale">
-      <a href="#format">Format</a><a href="#creator">Creator</a><a href="#territorio">Territorio</a><a href="#metodo">Come funziona</a><a href="#logistica">Logistica</a>
+      <a href="#creator">Creator</a><a href="#panel-condivisi">Panel condivisi</a><a href="#community">Community</a><a href="#territorio">Territorio</a><a href="#contatti">Contatti</a>
     </nav>
     <a class="button small" href="#contatti">Parliamo della tua fiera</a>
   </header>
@@ -418,6 +420,11 @@
       <div class="panel-carousel"><div class="panel-track" id="panel-track"></div><div class="panel-carousel-controls"><button type="button" data-panel-scroll="previous" aria-label="Panel precedenti"><span>‹</span> Precedenti</button><button type="button" data-panel-scroll="next" aria-label="Panel successivi">Successivi <span>›</span></button></div></div>
     </section>
 
+    <section class="communities" id="community">
+      <div class="section-head"><div><p class="eyebrow">Community che diventano esperienza</p><h2>Community che<br>creano mondi.</h2></div><p>Raduni, set tematici, giochi e attività costruite insieme alle community che animano ogni fandom.</p></div>
+      <div class="community-carousel"><div class="community-track" id="community-track" aria-label="Community disponibili"></div><div class="community-controls"><button type="button" data-community-scroll="previous" aria-label="Community precedente">‹</button><button type="button" data-community-scroll="next" aria-label="Community successiva">›</button></div></div>
+    </section>
+
     <section class="territory" id="territorio">
       <div class="section-head"><div><p class="eyebrow">Da nord a sud</p><h2>Creator vicini<br>alla tua fiera.</h2></div><p>Consulta il roster per area geografica. I profili con più basi operative compaiono nelle diverse zone in cui sono disponibili.</p></div>
       <div class="territory-grid" id="territory-grid" aria-label="Creator divisi per area geografica"></div>
@@ -492,8 +499,9 @@
 <script src="supabase-config.js"></script><script src="supabase-client.js"></script>
 <script src="creators.js?v=11"></script>
   <script src="panels.js?v=3"></script>
-  <script src="site-content.js?v=7"></script>
-  <script src="data-backend.js?v=3"></script>
-  <script src="script.js?v=28"></script><script src="analytics-config.js"></script><script src="cookie-consent.js"></script>
+  <script src="communities.js?v=4"></script>
+  <script src="site-content.js?v=9"></script>
+  <script src="data-backend.js?v=6"></script>
+  <script src="script.js?v=37"></script><script src="analytics-config.js"></script><script src="cookie-consent.js"></script>
 </body>
 </html>

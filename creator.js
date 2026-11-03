@@ -129,8 +129,10 @@ if (!creator) {
   const creatorSocials=normalizeSocials(creator);
   structured.textContent=JSON.stringify({'@context':'https://schema.org','@type':'Person',name:creator.name,description:creator.description,image:absoluteImage,url:canonicalUrl,sameAs:creatorSocials.map(item=>item.url),affiliation:{'@type':'Organization',name:'C3 Agency SRL',url:'https://events.c3agency.it/'}});
   document.head.append(structured);
+  const creatorImagePosition=creator.imagePositionX!=null||creator.imagePositionY!=null?`${creator.imagePositionX??50}% ${creator.imagePositionY??30}%`:(imageFocus[creator.slug]||'50% 42%');
+  const creatorImageZoom=(Number(creator.imageZoom)||100)/100;
   const media = creator.image
-    ? `<img src="${creator.image}" alt="${creator.name}" style="object-position:${imageFocus[creator.slug]||'50% 42%'}">`
+    ? `<img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}" style="object-position:${creatorImagePosition};object-fit:cover;transform-origin:${creatorImagePosition};transform:scale(${creatorImageZoom})">`
     : `<div class="profile-monogram" aria-hidden="true">${creator.name.split(' ').map(word=>word[0]).slice(0,2).join('')}</div>`;
   const categories=groupedActivities(creator);
   const contactEmailTarget=window.C3_SITE_CONTENT?.contactEmailTarget||'info@c3agency.it';

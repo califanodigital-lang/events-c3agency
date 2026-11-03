@@ -1,0 +1,11 @@
+.communities .section-head h2 {
+  max-width: 900px;
+  font-size: clamp(42px, 5.2vw, 74px);
+  line-height: .92;
+}
+
+@media (max-width: 760px) {
+  .communities .section-head h2 {
+    font-size: clamp(42px, 12vw, 58px);
+  }
+}
