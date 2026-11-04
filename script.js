@@ -72,7 +72,7 @@ const creatorCardMeta=creator=>{
   return parts.join(' · ')||'Italia · target trasversale';
 };
 const creatorPhotoPosition=creator=>`${creator.imagePositionX??50}% ${creator.imagePositionY??50}%`;
-const creatorPhotoMarkup=creator=>{if(!creator.image)return `<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`;const customized=creator.imagePositionX!=null||creator.imagePositionY!=null||creator.imageZoom!=null,position=creatorPhotoPosition(creator),zoom=(Number(creator.imageZoom)||100)/100,style=customized?` style="object-position:${position};transform-origin:${position};transform:scale(${zoom})"`:'';return `<div class="creator-photo"><img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}"${style}></div>`};
+const creatorPhotoMarkup=creator=>{if(!creator.image)return `<div class="creator-placeholder">${escapeHtml(creator.name.split(' ').map(word=>word[0]).slice(0,2).join(''))}</div>`;const customized=creator.imagePositionX!=null||creator.imagePositionY!=null||creator.imageZoom!=null,position=creatorPhotoPosition(creator),zoom=(Number(creator.imageZoom)||100)/100,style=customized?` style="object-position:${position};transform-origin:${position};transform:scale(${zoom})"`:'';return `<div class="creator-photo"><img src="${escapeHtml(creator.image)}" alt="${escapeHtml(creator.name)}" loading="lazy" decoding="async"${style}></div>`};
 
 const heroCast=document.querySelector('.hero-cast');
 if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -113,7 +113,7 @@ if(heroCast&&window.C3_CREATORS&&!window.matchMedia('(prefers-reduced-motion: re
   document.addEventListener('visibilitychange',()=>document.hidden?stopHeroRotation():startHeroRotation());
 }
 if(creatorGrid&&window.C3_CREATORS){
-  creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creatorPhotoMarkup(creator)}<div><span>${escapeHtml(creator.category)}</span><h3>${escapeHtml(creator.name)}</h3><p>${escapeHtml(creator.cardDescription||creator.description)}</p><small>${escapeHtml(creatorCardMeta(creator))}</small></div></article>`).join('');
+  creatorGrid.innerHTML=Object.values(window.C3_CREATORS).map(creator=>`<article class="creator" data-slug="${escapeHtml(creator.slug)}" data-tags="${creatorTags(creator)}">${creatorPhotoMarkup(creator)}<div><span>${escapeHtml(creator.category)}</span><h3><a class="creator-profile-link" href="${escapeHtml(window.C3_SEO.creatorUrl(creator.slug))}">${escapeHtml(creator.name)}</a></h3><p>${escapeHtml(creator.cardDescription||creator.description)}</p><small>${escapeHtml(creatorCardMeta(creator))}</small></div></article>`).join('');
   const count=document.querySelector('.roster-count');
   if(count) count.textContent=`${Object.keys(window.C3_CREATORS).length} CREATOR · UN UNICO PARTNER`;
 }
@@ -208,6 +208,7 @@ startRosterAutoplay();
 
 const slugify = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
 cards.forEach(card=>{
+  if(card.querySelector('a[href]')) return;
   const name=card.querySelector('h3')?.textContent.trim();
   if(!name) return;
   const href=`creator.html?id=${encodeURIComponent(card.dataset.slug||slugify(name))}`;
@@ -241,9 +242,10 @@ if(panelTrack&&window.C3_PANELS){
   },{passive:true});
 }
 if(territoryRoot&&window.C3_GEO&&window.C3_CREATORS){
+  window.C3_GEO=window.C3_SEO.territories(window.C3_CREATORS,window.C3_GEO);
   territoryRoot.innerHTML=Object.entries(window.C3_GEO).map(([area,group])=>`
     <article class="territory-column territory-${area}">
-      <header><span>${String(group.creators.length).padStart(2,'0')}</span><h3>${group.title}</h3><p>${group.subtitle}</p></header>
+      <header><span>${String(group.creators.length).padStart(2,'0')}</span><h3>${escapeHtml(group.title)}</h3><p>${escapeHtml(group.subtitle)}</p></header>
       <div class="territory-list">
         ${group.creators.filter(([slug])=>window.C3_CREATORS[slug]).map(([slug,region])=>{
           const creator=window.C3_CREATORS[slug];

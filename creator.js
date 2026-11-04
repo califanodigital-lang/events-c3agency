@@ -1,6 +1,7 @@
-(window.C3_DATA_READY||Promise.resolve()).then(()=>{
-const slug = new URLSearchParams(location.search).get('id');
-const creator = window.C3_CREATORS[slug];
+(()=>{const id=new URLSearchParams(location.search).get('id');if(id&&!document.body.dataset.creatorSlug&&(window.C3_SEO_ROUTES?.creator||[]).includes(id))location.replace(new URL(window.C3_SEO.creatorUrl(id),document.baseURI).href)})();
+(window.C3_DATA_READY||Promise.resolve()).then(result=>{
+const slug = new URLSearchParams(location.search).get('id')||document.body.dataset.creatorSlug;
+const creator = window.C3_CREATORS[slug]||(result?.source!=='supabase'?window.C3_PRERENDERED_CREATOR:null);
 const root = document.querySelector('#profile');
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 const normalizeSocials=person=>(person.socials?.length?person.socials:(window.C3_CREATOR_SOCIALS?.[person.slug]||[])).map(item=>Array.isArray(item)?{label:item[0],url:item[1]}:item).filter(item=>item&&/^https?:\/\//i.test(item.url||''));
@@ -109,14 +110,15 @@ function groupedActivities(person){
 
 if (!creator) {
   document.title = 'Creator non trovato | C3 Agency';
+  document.querySelector('meta[name="robots"]').content='noindex,follow';
   root.innerHTML = `<section class="profile-error"><p class="eyebrow">Profilo non trovato</p><h1>Questo creator non è disponibile.</h1><a class="button" href="index.html#creator">Torna al roster</a></section>`;
 } else {
-  document.title = `${creator.name}: creator per fiere ed eventi | C3 Agency`;
+  document.title = `${creator.name}: creator per fiere e convention | C3 Agency`;
   const seoDescription = `${creator.name}, creator C3 Agency per fiere, festival ed eventi: ${creator.description}`.slice(0, 300);
-  const canonicalUrl = `https://events.c3agency.it/creator.html?id=${encodeURIComponent(creator.slug)}`;
+  const canonicalUrl = new URL(window.C3_SEO.creatorUrl(creator.slug),'https://events.c3agency.it/').href;
   const absoluteImage = new URL(creator.image || 'assets/c3-agency-logo.png', canonicalUrl).href;
   document.querySelector('meta[name="description"]').content = seoDescription;
-  document.querySelector('link[rel="canonical"]').href = canonicalUrl;
+  let canonical=document.querySelector('link[rel="canonical"]');if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.append(canonical)}canonical.href=canonicalUrl;
   const setMeta=(selector,value,attribute='content')=>{const node=document.querySelector(selector);if(node)node.setAttribute(attribute,value)};
   setMeta('meta[property="og:title"]',`${creator.name}: creator per fiere ed eventi | C3 Agency`);
   setMeta('meta[property="og:description"]',seoDescription);
@@ -124,10 +126,10 @@ if (!creator) {
   let ogImage=document.querySelector('meta[property="og:image"]');
   if(!ogImage){ogImage=document.createElement('meta');ogImage.setAttribute('property','og:image');document.head.append(ogImage)}
   ogImage.content=absoluteImage;
-  const structured=document.createElement('script');
+  const structured=document.getElementById('seo-entity')||document.createElement('script');structured.id='seo-entity';
   structured.type='application/ld+json';
   const creatorSocials=normalizeSocials(creator);
-  structured.textContent=JSON.stringify({'@context':'https://schema.org','@type':'Person',name:creator.name,description:creator.description,image:absoluteImage,url:canonicalUrl,sameAs:creatorSocials.map(item=>item.url),affiliation:{'@type':'Organization',name:'C3 Agency SRL',url:'https://events.c3agency.it/'}});
+  structured.textContent=JSON.stringify({'@context':'https://schema.org','@type':'ProfilePage',url:canonicalUrl,mainEntity:{'@type':['never-20','team-rocker','ede-e-davide'].includes(creator.slug)?'Organization':'Person',name:creator.name,description:creator.description,image:absoluteImage,url:canonicalUrl,sameAs:creatorSocials.map(item=>item.url)}});
   document.head.append(structured);
   const creatorImagePosition=creator.imagePositionX!=null||creator.imagePositionY!=null?`${creator.imagePositionX??50}% ${creator.imagePositionY??30}%`:(imageFocus[creator.slug]||'50% 42%');
   const creatorImageZoom=(Number(creator.imageZoom)||100)/100;
