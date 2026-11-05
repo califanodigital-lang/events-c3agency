@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const output=path.join(root,'_site');
 const origin='https://events.c3agency.it/';
-const context={window:{},localStorage:{getItem:()=>null,setItem:()=>{}},console};
+const context={window:{},localStorage:{getItem:()=>null,setItem:()=>{}},console,URL};
 vm.createContext(context);
 for(const file of ['supabase-config.js','creators.js','creator-socials.js','panels.js','site-content.js','seo-content.js'])vm.runInContext(await readFile(path.join(root,file),'utf8'),context,{filename:file});
 const config=context.window.C3_SUPABASE_CONFIG;
