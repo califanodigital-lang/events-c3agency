@@ -291,9 +291,11 @@ if(contactForm&&whatsappButton){
     const data=new FormData(contactForm);
     return `Buongiorno C3 Agency,\n\nNome e ruolo: ${data.get('name')||'-'}\nEmail: ${data.get('email')||'-'}\nEvento: ${data.get('event')||'-'}\nCittà e location: ${data.get('city')||'-'}\nDate previste: ${data.get('dates')||'-'}\nAffluenza stimata: ${data.get('audience')||'-'}\nAree tematiche: ${data.get('areas')||'-'}\nBudget indicativo: ${data.get('budget')||'-'}\nCreator o format di interesse: ${data.get('interest')||'-'}\nRecapito telefonico: ${data.get('phone')||'-'}`;
   };
+  let contactSending=false;
   contactForm.addEventListener('submit',async event=>{
     event.preventDefault();
-    if(!contactForm.reportValidity()) return;
+    if(contactSending||!contactForm.reportValidity()) return;
+    contactSending=true;
     const submitButton=contactForm.querySelector('button[type="submit"]'),status=document.querySelector('#contact-status');
     status.className='contact-status';status.textContent='Invio in corso…';submitButton.disabled=true;
     const data=new FormData(contactForm),payload=Object.fromEntries(data.entries());
@@ -302,8 +304,9 @@ if(contactForm&&whatsappButton){
       const {data:result,error}=await window.C3_SUPABASE.functions.invoke('contact-request',{body:payload});
       if(error||!result?.ok)throw error||new Error(result?.error||'Invio non riuscito');
       contactForm.reset();status.className='contact-status is-success';status.textContent='Richiesta inviata correttamente. Ti ricontatteremo al più presto.';
+      try{window.C3_ANALYTICS?.contactSent()}catch{/* Measurement must never change a successful submission. */}
     }catch(error){console.error(error);status.className='contact-status is-error';status.textContent='Invio non riuscito. Riprova tra poco oppure utilizza WhatsApp.'}
-    finally{submitButton.disabled=false}
+    finally{contactSending=false;submitButton.disabled=false}
   });
   whatsappButton.addEventListener('click',()=>{
     if(!contactForm.reportValidity()) return;
