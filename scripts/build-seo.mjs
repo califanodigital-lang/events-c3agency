@@ -50,10 +50,10 @@ const creators={};
 for(const row of creatorRows){const person={...row.data,slug:row.slug};person.image=await materialize(person.image);if(!person.socials?.length)person.socials=context.window.C3_CREATOR_SOCIALS?.[person.slug]||[];creators[row.slug]=person}
 const panels=[];
 for(const row of panelRows)panels.push({...row.data,slug:row.slug,image:await materialize(row.data.image)});
-context.window.C3_SEO_ROUTES={creator:Object.keys(creators),panel:panels.map(item=>item.slug)};
+context.window.C3_SEO_ROUTES={creator:Object.keys(creators),panel:panels.map(item=>item.slug),images:{creator:Object.fromEntries(Object.values(creators).map(person=>[person.slug,person.image])),panel:Object.fromEntries(panels.map(panel=>[panel.slug,panel.image]))}};
 const seo=context.window.C3_SEO,e=seo.escape;
 await writeFile(path.join(output,'seo-routes.js'),`window.C3_SEO_ROUTES=${JSON.stringify(context.window.C3_SEO_ROUTES)};\n`);
-const scripts='<script src="seo-routes.js?v=1"></script><script src="seo-content.js?v=1"></script>';
+const scripts='<script src="seo-routes.js?v=2"></script><script src="seo-content.js?v=3"></script>';
 const serial=value=>JSON.stringify(value).replace(/</g,'\\u003c');
 const metadata=(html,title,description,url,entity,image)=>{
   html=html.replace(/<title>[\s\S]*?<\/title>/i,`<title>${e(title)}</title>`).replace(/<meta\b[^>]*\bname="description"[^>]*>/gi,'').replace(/<link\b[^>]*\brel="canonical"[^>]*>/gi,'').replace(/<meta\b[^>]*\b(?:property="og:[^"]+"|name="twitter:[^"]+")[^>]*>/gi,'');
@@ -70,22 +70,22 @@ const emit=async(relative,html,indexable=true)=>{
   await mkdir(path.dirname(path.join(output,relative)),{recursive:true});await writeFile(path.join(output,relative),html);if(indexable)pages.push({url:new URL(relative==='index.html'?'':relative.replace(/index\.html$/,''),origin).href,lastmod:state[relative].lastmod});
 };
 for(const person of Object.values(creators)){
-  const url=origin+seo.creatorUrl(person.slug),image=person.image?new URL(person.image,origin).href:undefined;
+  const url=origin+seo.creatorUrl(person.slug),image=seo.publicImage(person.image,'creator',person.slug);
   const entity={'@context':'https://schema.org','@type':'ProfilePage',url,mainEntity:{'@type':['never-20','team-rocker','ede-e-davide'].includes(person.slug)?'Organization':'Person',name:person.name,description:person.description,url,image,sameAs:(person.socials||[]).map(item=>Array.isArray(item)?item[1]:item.url).filter(item=>/^https?:\/\//i.test(item||''))}};
-  let html=makePage(creatorTemplate,'profile',seo.creatorMarkup(person),`data-creator-slug="${e(person.slug)}"`);
-  html=html.replace('<script src="creator.js',()=>`<script>window.C3_PRERENDERED_CREATOR=${serial(person)};</script><script src="creator.js`);
+  let html=makePage(creatorTemplate,'profile',seo.creatorMarkup(person,panels),`data-creator-slug="${e(person.slug)}"`);
+  html=html.replace('<script src="creator.js',()=>`<script>window.C3_PRERENDERED_CREATOR=${serial(person)};window.C3_PRERENDERED_PANELS=${serial(panels.filter(panel=>(panel.participants||[]).includes(person.slug)))};</script><script src="creator.js`);
   html=metadata(html,`${person.name}: creator per fiere e convention | C3 Agency`,`${person.name}: ${person.description}`.slice(0,300),url,entity,image);
   await emit(`creator/${person.slug}/index.html`,html);
 }
 for(const panel of panels){
   const url=origin+seo.panelUrl(panel.slug),entity={'@context':'https://schema.org','@type':'Service',name:panel.title,description:panel.description,url,provider:{'@type':'Organization',name:'C3 Agency SRL',url:origin}};
   let html=makePage(panelTemplate,'panel-detail',seo.panelMarkup(panel,creators),`data-panel-slug="${e(panel.slug)}"`);
-  html=metadata(html,`${panel.title}: panel per fiere e convention | C3 Agency`,`${panel.title}: ${panel.description}`.slice(0,300),url,entity);
+  html=metadata(html,`${panel.title}: panel per fiere e convention | C3 Agency`,`${panel.title}: ${panel.description}`.slice(0,300),url,entity,seo.publicImage(panel.image,'panel',panel.slug));
   await emit(`panel/${panel.slug}/index.html`,html);
 }
 for(const definition of seo.services){
   const service=seo.resolveService(definition,content),url=`${origin}servizi/${service.slug}/`,entity={'@context':'https://schema.org','@type':'Service',name:service.title,description:service.lead,url,areaServed:{'@type':'Country',name:'Italia'},provider:{'@type':'Organization',name:'C3 Agency SRL',url:origin}};
-  let template=creatorTemplate.replace('class="profile-page"','class="service-page"').replace('<main id="profile" class="profile-shell" aria-live="polite"></main>','<main id="service-content" class="service-shell"></main>').replace(/<script src="creator\.js[^>]*><\/script>/,'').replace('</head>','<link rel="stylesheet" href="seo.css?v=1"></head>');
+  let template=creatorTemplate.replace('class="profile-page"','class="service-page"').replace('<main id="profile" class="profile-shell" aria-live="polite"></main>','<main id="service-content" class="service-shell"></main>').replace(/<script src="creator\.js[^>]*><\/script>/,'');
   let html=makePage(template,'service-content',seo.serviceMarkup(definition,content,creators),`data-seo-service="${service.slug}"`);
   html=metadata(html,`${service.title} | C3 Agency`,service.lead,url,entity);
   html=html.replace(/<meta name="robots"[^>]*>/,'<meta name="robots" content="noindex,follow">');
