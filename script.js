@@ -1,4 +1,5 @@
 (window.C3_DATA_READY||Promise.resolve()).then(()=>{
+if(window.C3_SEO?.resolveSiteContent)window.C3_SITE_CONTENT=window.C3_SEO.resolveSiteContent(window.C3_SITE_CONTENT);
 const creatorGrid=document.querySelector('.creator-grid');
 const savedRoster=localStorage.getItem('c3_creator_manager_data');
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));

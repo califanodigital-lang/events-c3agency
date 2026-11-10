@@ -6,13 +6,44 @@
     {slug:'presentatori-giurie-contest-cosplay',key:'cosplay',label:'Conduzione e cosplay',title:'Presentatori e giurie per contest cosplay e fiere',lead:'Conduzione del palco, moderazione e giurie cosplay per collegare ospiti, partecipanti e pubblico con un programma preparato insieme all’organizzazione.',text:'Un contest richiede attenzione ai tempi, alle presentazioni e al rapporto con il pubblico. C3 Agency seleziona dal roster presentatori, cosplayer e professionisti adatti alla conduzione e alla valutazione delle esibizioni.\nPrima dell’evento vengono concordati regolamento, criteri di valutazione, scaletta ed esigenze del palco. La composizione della giuria e le attività aggiuntive, come panel, workshop o meet & greet, dipendono dai profili scelti.',items:'Conduzione del contest e presentazione dei partecipanti\nGiuria cosplay e confronto sui criteri di valutazione\nHosting del main stage e moderazione delle interviste\nPanel e workshop sul cosplay, secondo disponibilità del roster',question:'Possiamo abbinare conduzione e altre attività?',answer:'Sì. In base al profilo e alle disponibilità possiamo valutare più attività nello stesso evento. Durate, spostamenti e momenti sul palco vengono definiti nella proposta.',pattern:'cosplay|giuria|contest|hosting|conduzione|presentazione|moderazione'},
     {slug:'panel-workshop-spettacoli-fiere',key:'format',label:'Panel, workshop e spettacoli',title:'Panel, workshop e spettacoli per fiere e festival nerd',lead:'Talk, laboratori pratici, concerti e performance: format da inserire nel programma di una fiera del fumetto, di un festival nerd o di una convention.',text:'I panel mettono in dialogo creator e pubblico su fantasy, cinema, animazione, gaming e cultura pop. I workshop aggiungono una parte pratica, con contenuti e materiali da concordare in base allo spazio e ai partecipanti.\nPer il palco possiamo valutare concerti, performance vocali, doppiaggio live e altri spettacoli del roster. Ogni proposta viene verificata rispetto a durata, pubblico e necessità tecniche, senza imporre un programma uguale per tutte le manifestazioni.',items:'Panel e talk con uno o più creator\nWorkshop di cosplay, prop-making, gaming e storytelling\nConcerti e performance ispirati ad anime, fantasy e cultura pop\nDurata, spazi e dotazioni tecniche concordati prima dell’evento',question:'Di quali informazioni avete bisogno per proporre un format?',answer:'Sono utili date, pubblico, spazi disponibili, durata desiderata e dotazione tecnica. Se il programma è ancora in costruzione, possiamo partire dalle aree tematiche e dal budget.',pattern:'panel|talk|workshop|laborator|concerto|performance|show|musica|doppiaggio'}
   ];
-  const defaults={seoHomeTitle:'Creator e ospiti per fiere del fumetto e convention | C3 Agency',seoHomeDescription:'Booking creator e ospiti per fiere del fumetto e convention in Italia. Panel, workshop, spettacoli, presentatori e giurie cosplay: richiedi una proposta.'};
+  const homeCopy={
+    seoHomeTitle:['Creator e ospiti per fiere del fumetto e convention | C3 Agency','Talent e ospiti per fiere del fumetto | C3 Agency'],
+    seoHomeDescription:['Booking creator e ospiti per fiere del fumetto e convention in Italia. Panel, workshop, spettacoli, presentatori e giurie cosplay: richiedi una proposta.','Talent, YouTuber e ospiti per fiere del fumetto e convention. Booking, direzione creativa e gestione di aree cosplay, gaming e palchi in tutta Italia.'],
+    heroEyebrow:['Creator package · fiere & festival','Talent e ospiti per fiere del fumetto'],
+    heroLead:['Creator, artisti e divulgatori già abituati al pubblico dal vivo. Costruiamo un palinsesto su misura tra fantasy, pop culture, musica, gaming e cosplay.','Creator, YouTuber, cosplayer e artisti per fiere e convention. Dal booking degli ospiti alla direzione creativa e alla gestione delle aree, costruiamo il programma intorno al tuo pubblico.'],
+    rosterEyebrow:['Il roster completo','Talent, YouTuber e creator'],
+    rosterText:['Filtra l’intero roster per area. Il cast viene poi definito in base a target, tono, territorio e budget della manifestazione.','Scegli talent e YouTuber per fiere del fumetto, convention e festival nerd. Filtra il roster per area: verifichiamo disponibilità e attività in base a pubblico, date e budget.'],
+    logisticsEyebrow:['Logistica coordinata','Direzione creativa e gestione aree'],
+    logisticsText:['Gestiamo la presenza dei creator con un modello semplice e modulare, pensato per alleggerire l’organizzazione della fiera e ottimizzare il budget.','Affianchiamo gli organizzatori nella gestione delle fiere del fumetto: direzione creativa, ospiti e coordinamento delle aree, con un palinsesto su misura.'],
+    logistics1Title:['Un unico coordinamento','Direzione creativa'],
+    logistics1Text:['Cast, disponibilità e attività vengono costruiti come un unico palinsesto coerente.','Definiamo concept, temi e programma della manifestazione, coordinando talent e format insieme all’organizzazione.'],
+    logistics4Title:['Presenza continuativa','Gestione delle aree'],
+    logistics4Text:['Gli stessi volti possono accompagnare panel, workshop, palco e area community durante l’evento.','Coordiniamo le attività delle aree cosplay, gaming e intrattenimento, collegando ospiti, orari e necessità del programma.'],
+    faqQuestion1:['Come scegliete i creator?','Come ingaggiare talent e YouTuber per una fiera?'],
+    faqAnswer1:['Partiamo da pubblico, tema, dimensioni, territorio e budget. Poi proponiamo un cast coerente di creator, ospiti, presentatori e performer.','Indica date, città, pubblico e budget: selezioniamo dal roster creator, YouTuber e ospiti per fiere del fumetto e convention. Verifichiamo disponibilità e attività, dai panel ai meet & greet.'],
+    faqQuestion2:['Quali attività possiamo portare?','Vi occupate anche della direzione creativa e delle aree?'],
+    faqAnswer2:['Panel, workshop, concerti, show, hosting, contest e giurie cosplay, meet & greet, gaming e giochi di ruolo.','Sì. Affianchiamo l’organizzazione nella direzione creativa e nella gestione delle aree cosplay, gaming e intrattenimento. Costruiamo il palinsesto tra panel, workshop, show e contest, coordinando ospiti e attività.']
+  };
+  const defaults=Object.fromEntries(Object.entries(homeCopy).map(([key,copy])=>[key,copy[1]]));
   services.forEach(service=>{['title','lead','text','items','question','answer'].forEach(field=>defaults[`service_${service.key}_${field}`]=service[field])});
   const exampleDefaults={booking:['beatrice-lorenzi','teo-the-teach','lo-scribacchino','never-20','itsklyo','mochichuu'],cosplay:['mochichuu','loon','giovada','zhalia','soryu-geggy','sareika-lab'],format:['cristiana-nerdarte','golgota','sareika-lab','carla-grimaldi','itsklyo','team-rocker']};
   services.forEach(service=>exampleDefaults[service.key].forEach((slug,index)=>defaults[`service_${service.key}_creator${index+1}`]=slug));
   [1,2,3].forEach(index=>['name','text','url'].forEach(field=>defaults[`reference_${index}_${field}`]=''));
   window.C3_SITE_CONTENT_DEFAULTS={...window.C3_SITE_CONTENT_DEFAULTS,...defaults};
   window.C3_SITE_CONTENT={...defaults,...window.C3_SITE_CONTENT};
+  const resolveSiteContent=(stored={})=>{
+    const source=stored&&typeof stored==='object'&&!Array.isArray(stored)?stored:{};
+    const content={...window.C3_SITE_CONTENT_DEFAULTS,...source};
+    // Upgrade only the previous standard copy; retain custom text and later edits.
+    if(Number(source.seoEditorialVersion||0)<20261110){
+      Object.entries(homeCopy).forEach(([key,[previous,next]])=>{
+        if(!Object.prototype.hasOwnProperty.call(source,key)||source[key]===previous)content[key]=next;
+      });
+    }
+    content.seoEditorialVersion=Math.max(Number(source.seoEditorialVersion)||0,20261110);
+    return content;
+  };
+  const homeService=content=>({'@type':'Service',name:String(content.seoHomeTitle||defaults.seoHomeTitle).split('|')[0].trim(),description:content.seoHomeDescription||defaults.seoHomeDescription,provider:{'@id':'https://events.c3agency.it/#organization'},areaServed:{'@type':'Country',name:'Italia'},serviceType:['Booking talent e creator per fiere','YouTuber e ospiti per fiere del fumetto','Direzione creativa per fiere e convention','Gestione aree cosplay e gaming','Panel, workshop e spettacoli','Presentatori e giurie cosplay']});
   const route=(type,slug)=>((window.C3_SEO_ROUTES?.[type]||[]).includes(slug)?`${type}/${encodeURIComponent(slug)}/`:`${type}.html?id=${encodeURIComponent(slug)}`);
   const activityTitle=item=>typeof item==='string'?item:String(item?.title||'');
   const safeHref=value=>/^https?:\/\//i.test(value||'')?escape(value):'#';
@@ -141,5 +172,5 @@
       return [area,{...group,creators:entries,subtitle:regions.join(' · ')}];
     }));
   };
-  window.C3_SEO={escape,activityDescription,publicImage,relatedPanelsMarkup,services,resolveService,referencesMarkup,territories,creatorUrl:slug=>route('creator',slug),panelUrl:slug=>route('panel',slug),creatorMarkup,panelMarkup,serviceMarkup};
+  window.C3_SEO={escape,resolveSiteContent,homeService,activityDescription,publicImage,relatedPanelsMarkup,services,resolveService,referencesMarkup,territories,creatorUrl:slug=>route('creator',slug),panelUrl:slug=>route('panel',slug),creatorMarkup,panelMarkup,serviceMarkup};
 })();
