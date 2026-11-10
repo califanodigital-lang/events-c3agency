@@ -25,7 +25,7 @@ const [creatorRows,panelRows,settingRows]=await Promise.all([
 ]);
 if(!Array.isArray(creatorRows)||!creatorRows.length||!Array.isArray(panelRows)||!Array.isArray(settingRows))throw new Error('Dati pubblici incompleti: la versione online precedente resta disponibile.');
 const settings=Object.fromEntries(settingRows.map(row=>[row.key,row.data]));
-const content={...context.window.C3_SITE_CONTENT_DEFAULTS,...settings.site_content};
+const content=context.window.C3_SEO.resolveSiteContent(settings.site_content);
 const slugPattern=/^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 for(const row of [...creatorRows,...panelRows])if(!slugPattern.test(row.slug))throw new Error(`Indirizzo non valido: ${row.slug}`);
 
@@ -53,7 +53,7 @@ for(const row of panelRows)panels.push({...row.data,slug:row.slug,image:await ma
 context.window.C3_SEO_ROUTES={creator:Object.keys(creators),panel:panels.map(item=>item.slug),images:{creator:Object.fromEntries(Object.values(creators).map(person=>[person.slug,person.image])),panel:Object.fromEntries(panels.map(panel=>[panel.slug,panel.image]))}};
 const seo=context.window.C3_SEO,e=seo.escape;
 await writeFile(path.join(output,'seo-routes.js'),`window.C3_SEO_ROUTES=${JSON.stringify(context.window.C3_SEO_ROUTES)};\n`);
-const scripts='<script src="seo-routes.js?v=2"></script><script src="seo-content.js?v=3"></script>';
+const scripts='<script src="seo-routes.js?v=2"></script><script src="seo-content.js?v=4"></script>';
 const serial=value=>JSON.stringify(value).replace(/</g,'\\u003c');
 const metadata=(html,title,description,url,entity,image)=>{
   html=html.replace(/<title>[\s\S]*?<\/title>/i,`<title>${e(title)}</title>`).replace(/<meta\b[^>]*\bname="description"[^>]*>/gi,'').replace(/<link\b[^>]*\brel="canonical"[^>]*>/gi,'').replace(/<meta\b[^>]*\b(?:property="og:[^"]+"|name="twitter:[^"]+")[^>]*>/gi,'');
@@ -110,6 +110,12 @@ let faqIndex=0;home=home.replace(/(<article class="chat-row">[\s\S]*?<h3>)[\s\S]
 let imageIndex=0;home=home.replace(/<img\b[^>]*>/g,tag=>{imageIndex++;return tag.includes('loading=')?tag:tag.replace('<img',`<img loading="${imageIndex<=4?'eager':'lazy'}" decoding="async"`)});
 home=metadata(home,content.seoHomeTitle,content.seoHomeDescription,origin);
 home=home.replace(/(<([a-z0-9]+)[^>]*data-site-text="([^"]+)"[^>]*>)[\s\S]*?(<\/\2>)/gi,(match,start,tag,key,end)=>content[key]!=null?start+e(content[key])+end:match);
+home=home.replace(/(<script\b[^>]*type="application\/ld\+json"[^>]*>)([\s\S]*?)(<\/script>)/g,(match,start,json,end)=>{
+  const entity=JSON.parse(json);
+  if(!Array.isArray(entity['@graph']))return match;
+  entity['@graph']=entity['@graph'].map(item=>item['@type']==='Service'?seo.homeService(content):item);
+  return start+serial(entity)+end;
+});
 const references=seo.referencesMarkup(content);
 home=home.replace(/<section class="experiences" id="esperienze"[^>]*>[\s\S]*?<\/section>/,()=>`<section class="experiences" id="esperienze"${references?'':' hidden'}><p class="eyebrow">Collaborazioni e attività</p><h2>Esperienze in fiera.</h2><div class="reference-list">${references}</div></section>`);
 await emit('index.html',home);
